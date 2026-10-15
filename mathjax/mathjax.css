@@ -1,0 +1,37 @@
+/* =============================================================================
+   mathjax.css
+   The only stylesheet the MathJax module needs.
+   ============================================================================= */
+
+/* Hides content until typesetting finishes, so raw LaTeX is never seen.
+   mathjax-setup.js removes this class once MathJax is done, or, if the
+   library never arrives, shows the LaTeX source instead (its section 7).
+   Put it on any wrapper; omitting it only costs a brief flash. */
+.eq-hidden-until-ready { visibility: hidden; }
+
+
+/* \ref links: the color of the sentence around them, underlined on hover --
+   the same as figure-setup's references.
+
+   MathJax's own stylesheet colors them `linktext`, and it is injected into the
+   page after this file, so these selectors carry the .MathJax class to outrank
+   it. The underline goes on the glyphs rather than the link: MathJax draws each
+   character as an inline-block, and an inline-block does not inherit its
+   parent's underline. a[href] covers the moment before MathJax's accessibility
+   pass renames the attribute to data-mjx-href. */
+mjx-container.MathJax a[href],
+mjx-container.MathJax a[data-mjx-href] {
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+mjx-container.MathJax a[href]:hover mjx-c,
+mjx-container.MathJax a[data-mjx-href]:hover mjx-c {
+  text-decoration: underline;
+}
+
+
+/* OPTIONAL. Makes equations completely inert to the mouse.
+   Note this also disables the clickable links produced by \ref. */
+/* mjx-container { pointer-events: none; } */

@@ -1,0 +1,458 @@
+/* The content blocks a slide is built from: the three grid arrangements,
+   .split and .process, the .block card with its
+   highlights and title bars, key results, the .bullets list with its
+   comparison marks, the <mark> highlighter and footnotes. */
+
+/* Three arrangements of the same .block card: .columns side by side, .rows
+   stacked, .grid a two-column bed a block can span. The left-aligned text is
+   what makes them read as blocks rather than floating paragraphs on a slide
+   that would otherwise center them. */
+.columns,
+.rows,
+.grid {
+  --grid-gap: clamp(1.5rem, 4vw, 3rem);
+  display: grid;
+  gap: var(--grid-gap);
+  width: 100%;
+  max-width: var(--bed-max);
+  text-align: left;
+}
+
+/* auto-fit plus a minimum track does the responsive work with no media query:
+   the moment two 18rem tracks no longer fit the stage, the grid drops to one
+   column and the blocks stack by themselves.
+
+   The minimum is capped at the bed's own width, min(18rem, 100%). On a phone
+   the stage is narrower than 18rem, and an uncapped minimum made the single
+   track wider than the stage: the blocks ran off to the right and under the
+   rail, while .rows, whose track can shrink to nothing, fitted. Capped, the
+   three arrangements behave the same on a narrow screen. */
+.columns {
+  grid-template-columns: repeat(auto-fit, minmax(min(18rem, 100%), 1fr));
+}
+
+/* The same blocks stacked instead of side by side. One track, so they never
+   sit next to each other however wide the stage gets, and a tighter gap --
+   vertical space is the scarce one. Stretched taller than its items, beside a
+   longer card in .columns, the stack keeps each at its own height and centers
+   them as a group instead of stretching every row. That also keeps a
+   data-reveal-rise mask exactly one line tall, which its line needs in order
+   to rise through the edge rather than inside it. */
+.rows {
+  --grid-gap: clamp(1rem, 2.5vw, 2rem);
+  grid-template-columns: minmax(0, 1fr);
+  align-content: center;
+}
+
+/* Two columns at most, with no media query. Each track is asked to be at least
+   half the container less half the gap, so a third can never fit; and once the
+   container is too narrow for two 18rem tracks the 18rem minimum wins instead
+   and the blocks stack. .block-wide then spans whatever count is live, so the
+   same markup is a 2x2 bed on a wide stage and a single column on a phone --
+   capped at 100% for the same reason as .columns, so on a phone that single
+   column is the stage's width rather than 18rem. */
+.grid {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, max(18rem, calc(50% - var(--grid-gap) / 2))), 1fr));
+}
+
+.block-wide {
+  grid-column: 1 / -1;
+}
+
+/* A process: numbered cards in a row, joined by arrows, for a method or a
+   workflow. An <ol> whose items are .block cards, so it is a sequence to a
+   screen reader too. Every step gets an equal track in one row, which is what
+   makes it read as one line of travel; that is also why it is made for three
+   or four steps, since more leave each card too narrow.
+
+   The number and the arrow are both pseudo-elements of the card's li, so a
+   card that waits for its step (data-reveal="each") brings its own number and
+   the arrow that leads to it. */
+.process {
+  --process-gap: clamp(2rem, 4.5vw, 3.5rem);
+  counter-reset: process;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
+  gap: var(--process-gap);
+  width: 100%;
+  max-width: var(--bed-max);
+  text-align: left;
+}
+
+.process > li {
+  position: relative;
+  counter-increment: process;
+}
+
+/* 01, 02, 03 in the accent, which measures 5.3:1 on a card at worst: enough
+   for text. It is the card's first flex item, so it sits above the h3. */
+.process > li::before {
+  content: counter(process, decimal-leading-zero);
+  font-size: clamp(0.95rem, 1.4vw, 1.15rem);
+  font-weight: 650;
+  letter-spacing: 0.04em;
+  color: var(--accent);
+}
+
+/* A chevron in the middle of the gap before every card but the first,
+   pointing at it: two borders of a square turned 45 degrees. */
+.process > li + li::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: calc(var(--process-gap) / -2);
+  width: 0.65rem;
+  height: 0.65rem;
+  border-top: 3px solid var(--accent);
+  border-right: 3px solid var(--accent);
+  transform: translate(-65%, -50%) rotate(45deg);
+}
+
+/* The deck's one breakpoint (toc.css, citations.js). On a phone a row of
+   cards is too narrow to read, so they stack and the arrows turn to point
+   down. A query rather than auto-fit on purpose: wrapped at an arbitrary
+   width, a row would break mid-sequence and its arrows point nowhere. */
+@media (max-width: 44rem) {
+  .process {
+    grid-auto-flow: row;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .process > li + li::after {
+    top: calc(var(--process-gap) / -2);
+    left: 50%;
+    transform: translate(-50%, -65%) rotate(135deg);
+  }
+}
+
+/* A block of text beside a figure, so the text stops costing the figure
+   height. Deliberately not .columns: equal tracks would cap the figure at half
+   the stage, and max-width: 100% would then shrink a wide figure far more than
+   a narrow one -- the one thing figure-setup forbids, since every figure must
+   be scaled by --fig-scale and by nothing else. Here the figure keeps the width
+   figure-setup gives it and the block takes whatever is left, down to 16rem.
+   Below that the row wraps and the figure drops under the text, with no media
+   query: at 1280 a 176 mm figure sits beside its block only once --fig-scale
+   is about 1.08 or less.
+
+   Two blocks go in a .rows stack in the block's place, which flexes the same
+   way; without the rule, .rows' width: 100% would claim the whole line and
+   push the figure onto a line of its own.
+
+   A listing beside a table works the same way, for the same reason: the
+   listing keeps the width its longest line needs, the table takes the rest.
+   In equal .columns tracks that line outgrew its half on any window wide
+   enough for the code font to reach 1rem, and the listing scrolled. */
+.split {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(1.5rem, 4vw, 3rem);
+  width: 100%;
+  max-width: var(--bed-max);
+  text-align: left;
+}
+
+.split > .block,
+.split > .rows,
+.split > .table {
+  flex: 1 1 16rem;
+}
+
+.split > .code {
+  flex: 0 1 auto;
+}
+
+/* figure-setup's vertical margin keeps a figure off the text above and below
+   it in running flow; beside a block the gap does that job. Two classes, so it
+   outranks .fig wherever the stylesheets are imported. */
+.split > .fig {
+  flex: 0 1 auto;
+  margin: 0;
+}
+
+.block {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding: var(--block-pad);
+  border-radius: var(--block-radius);
+  background: var(--block-surface);
+  box-shadow: var(--block-shadow);
+}
+
+/* Identical to .block in every way but the fill. Swap the class, nothing else.
+   The -a / -b are categorical, not ordered: they exist to separate two things
+   on one slide, so neither outranks the other. */
+.block-highlight-a {
+  background: var(--block-surface-highlight-a);
+}
+
+.block-highlight-b {
+  background: var(--block-surface-highlight-b);
+}
+
+.block h3 {
+  margin: 0;
+  font-size: clamp(1.15rem, 2vw, 1.5rem);
+  font-weight: 650;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  color: var(--heading);
+}
+
+/* .slide p caps body text at 46ch to keep a centered line readable. Inside a
+   column the track is already the measure, and the cap would leave the two
+   blocks visibly unequal. */
+.block p {
+  max-width: none;
+}
+
+/* Titled blocks, Beamer's block, alertblock and exampleblock: the block's
+   first h3 becomes a bar across its top, in the deck's blue, red or green.
+   The bar reaches the card's edges with negative margins of the card's own
+   padding, and takes its top corners. */
+.block-titled {
+  --bar: var(--block-bar);
+}
+
+.block-alert {
+  --bar: var(--block-bar-alert);
+}
+
+.block-example {
+  --bar: var(--block-bar-example);
+}
+
+:is(.block-titled, .block-alert, .block-example) > h3:first-child {
+  margin: calc(-1 * var(--block-pad)) calc(-1 * var(--block-pad)) 0.3rem;
+  padding: 0.55em var(--block-pad);
+  border-radius: var(--block-radius) var(--block-radius) 0 0;
+  background: var(--bar);
+  color: var(--block-bar-text);
+}
+
+/* Key results: big numbers, each with a short label under it, for a results
+   or conclusions slide. A list whose items open with the number in <b>.
+   auto-fit like .columns, so three or four share a row and they stack on a
+   phone. The number is in the accent, 5.5:1 at worst on the page. */
+.results {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(12rem, 100%), 1fr));
+  gap: clamp(1.5rem, 4vw, 3rem);
+  width: 100%;
+  max-width: var(--bed-max);
+  font-size: clamp(1.05rem, 1.6vw, 1.35rem);
+  line-height: 1.4;
+  text-align: center;
+}
+
+.results b {
+  display: block;
+  margin-bottom: 0.15em;
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  font-weight: 650;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+  color: var(--accent);
+}
+
+/* Generic list block, like .columns: drop it on any slide. Left-aligned text
+   centered as a group -- .slide centers its items, so the list box lands in the
+   middle while its lines stay ragged-right.
+
+   .lines is the same list with no markers, each line centered on the slide: a
+   stack of short statements rather than an itemized list. It shares
+   everything here but the alignment, and data-reveal="each" works on it the
+   same way.
+
+   Never wider than the slide: text wraps by itself, but a display equation
+   cannot, and without the cap a list of them on a phone grew past both edges
+   of the slide. Capped, the equation scrolls inside its item instead
+   (displayOverflow, mathjax-setup.js). */
+.bullets,
+.lines {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.6rem, 1.2vw, 0.9rem);
+  max-width: min(52rem, 100%);
+  font-size: clamp(1.05rem, 1.6vw, 1.35rem);
+  line-height: 1.5;
+}
+
+.bullets {
+  text-align: left;
+}
+
+.lines {
+  text-align: center;
+}
+
+.bullets li {
+  position: relative;
+  padding-left: 1.6em;
+}
+
+/* A marker is a non-text graphic and needs 3:1; --accent clears it several
+   times over in both themes (tokens.css). The offset centers the dot on the
+   first line, whatever the line-height. */
+.bullets li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: calc(0.75em - 4px);
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+/* Numbered: the same list as an <ol>, the dot replaced by the item's number
+   in the accent, as Beamer's enumerate sets it, 5.3:1 on a card at worst. */
+ol.bullets {
+  counter-reset: bullets;
+}
+
+ol.bullets li {
+  counter-increment: bullets;
+}
+
+ol.bullets li::before {
+  content: counter(bullets) '.';
+  top: 0;
+  width: auto;
+  height: auto;
+  border-radius: 0;
+  background: none;
+  font-weight: 650;
+  font-variant-numeric: tabular-nums;
+  color: var(--accent);
+}
+
+/* An item that is one display equation: the number centers on it, as an
+   equation number does, and the equation is set from the left, after the
+   number, without MathJax's 1em above and below -- the list's gap spaces the
+   items. jax and display are named to outrank MathJax's own rule, which is
+   injected after this stylesheet. */
+ol.bullets li:has(> [data-eq]:only-child)::before {
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.bullets [data-eq] > mjx-container[jax="CHTML"][display="true"] {
+  margin-block: 0;
+  text-align: left;
+}
+
+/* A comparison's points: an item marked .pro takes a check in a green disc
+   in place of the dot, one marked .con a cross in a red one (--mark-pro,
+   --mark-con), 5.4:1 at worst against a card. Drawn rather than typed: a
+   font's check mark is calligraphic and changes with the font. Each disc is
+   an SVG mask over its color, so the color stays a token and follows the
+   theme, and the mark is cut out of the disc. Centered on the first line, as
+   the dot is. */
+.bullets li:is(.pro, .con)::before {
+  top: calc(0.75em - 0.525em);
+  width: 1.05em;
+  height: 1.05em;
+  border-radius: 0;
+  -webkit-mask: var(--mark) center / contain no-repeat;
+  mask: var(--mark) center / contain no-repeat;
+}
+
+.bullets li.pro::before {
+  --mark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cdefs%3E%3Cmask id='m'%3E%3Crect width='24' height='24' fill='white'/%3E%3Cpath d='M7.6 12.3l2.8 2.8 6-6' fill='none' stroke='black' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/mask%3E%3C/defs%3E%3Ccircle cx='12' cy='12' r='11' mask='url(%23m)'/%3E%3C/svg%3E");
+  background: var(--mark-pro);
+}
+
+.bullets li.con::before {
+  --mark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cdefs%3E%3Cmask id='m'%3E%3Crect width='24' height='24' fill='white'/%3E%3Cpath d='M8.6 8.6l6.8 6.8M15.4 8.6l-6.8 6.8' fill='none' stroke='black' stroke-width='1.8' stroke-linecap='round'/%3E%3C/mask%3E%3C/defs%3E%3Ccircle cx='12' cy='12' r='11' mask='url(%23m)'/%3E%3C/svg%3E");
+  background: var(--mark-con);
+}
+
+/* The highlighter: a marker band behind the lower part of a phrase. The band
+   is a background image rather than a background color so that its width
+   can be animated: a <mark> carrying data-reveal sweeps it in when its step
+   arrives (reveal.css). The text keeps its own color, which --highlight is
+   measured against in tokens.css. */
+mark {
+  padding-inline: 0.06em;
+  color: inherit;
+  background-color: transparent;
+  background-image: linear-gradient(var(--highlight), var(--highlight));
+  background-repeat: no-repeat;
+  background-position: 0 88%;
+  background-size: var(--mark-sweep, 100%) 0.62em;
+}
+
+/* Footnotes, as in a paper. A marker in the text, an empty <sup class="fn">,
+   takes the slide's next number, and each .footnote takes the same count in
+   order, so the two agree. Both restart on every slide. A slide with no
+   marker leaves its notes unnumbered: a source line, say. */
+.slide {
+  counter-reset: fn fn-note;
+}
+
+.fn::after {
+  counter-increment: fn;
+  content: counter(fn);
+}
+
+.slide:has(.fn) .footnote::before {
+  counter-increment: fn-note;
+  content: counter(fn-note);
+  margin-inline-end: 0.3em;
+  font-size: 0.75em;
+  line-height: 0;
+  vertical-align: super;
+}
+
+/* Small, muted and ranged left across the bed, like a paper's foot. Scoped to
+   .slide so it outweighs .slide p. */
+.slide .footnote {
+  width: 100%;
+  max-width: var(--bed-max);
+  margin-inline: auto;
+  font-size: clamp(0.8rem, 1.1vw, 0.95rem);
+  line-height: 1.4;
+  text-align: left;
+  color: var(--chrome-muted);
+}
+
+/* The first note is pushed to the foot by an auto margin, and the slide's
+   first item takes one too, so the content stays centered in the room above
+   the notes. Auto margins take over from justify-content, and fall to zero on
+   a full slide, where safe center would have gone to the top as well. A short
+   rule opens the notes, LaTeX's \footnoterule. */
+.slide:has(> .footnote) > :first-child {
+  margin-top: auto;
+}
+
+.slide > .footnote:not(.footnote + .footnote) {
+  margin-top: auto;
+  padding-top: 0.5em;
+  background: linear-gradient(var(--table-line), var(--table-line)) top left / 6rem 1px no-repeat;
+}
+
+/* Notes after the first sit close under it rather than a slide gap apart. */
+.slide > .footnote + .footnote {
+  margin-top: calc(0.3em - var(--slide-gap));
+}
+
+/* The last note clears the footer band, where the stepper and the counter
+   sit: the band's height less the slide's own bottom padding. */
+.slide > .footnote:last-child {
+  margin-bottom: calc(var(--chrome-height) - var(--slide-edge));
+}

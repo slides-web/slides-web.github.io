@@ -1,0 +1,78 @@
+/* The generated contents list on the opening slide. */
+
+/* Entries are real buttons, keyboard-activatable natively, like the rail's dots
+   and dashes -- and like them they carry data-slide, so the same delegated
+   listener serves both. The numbering is a CSS counter and never typed into the
+   markup: the list is generated from the sections array, so a section inserted
+   mid-deck renumbers the contents for free. */
+
+/* One column for a short list, five entries or fewer; two for a longer one,
+   filled down then across, so the numbers read in order down the left column
+   before continuing in the right. The row count is set from js/toc.js as
+   --toc-rows, because a column-flowing grid needs to know where to break, and
+   that count is also what makes a short list one column. A grid rather than
+   `columns: 2`: a multi-column box does not shrink-wrap reliably, and .slide
+   centers the list by its own width. */
+.toc {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  counter-reset: toc;
+  display: grid;
+  grid-auto-flow: column;
+  grid-template-rows: repeat(var(--toc-rows, 1), auto);
+  /* The list as a whole is centered by .slide; the entries inside it are not, so
+     the counters line up in a column instead of ragging with each name's
+     width. */
+  justify-items: start;
+  text-align: left;
+  column-gap: clamp(2rem, 5vw, 4.5rem);
+  row-gap: 0.35rem;
+}
+
+/* One column on a narrow screen -- a phone -- where two columns of names no
+   longer fit side by side. The same 44rem as the narrow query in
+   citation-setup/citations.js, which sets the phone's page size for the
+   references. Flowing by row with no template overrides the --toc-rows the
+   script sets, so the numbering still reads straight down. */
+@media (max-width: 44rem) {
+  .toc {
+    grid-auto-flow: row;
+    grid-template-rows: none;
+  }
+}
+
+.toc-item {
+  font: inherit;
+  font-size: clamp(1.15rem, 2.2vw, 1.6rem);
+  color: var(--body-text);
+  background: none;
+  border: 0;
+  border-bottom: 1px solid transparent;
+  padding: 0.2rem 0.3rem 0.2rem 0;  /* flush left, so entries line up with the title */
+  cursor: pointer;
+  transition:
+    color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.toc-item::before {
+  counter-increment: toc;
+  content: counter(toc, decimal-leading-zero);
+  padding-right: 0.6em;
+  font-family: var(--font-mono);
+  font-size: 0.75em;
+}
+
+/* The underline carries the accent; the label itself goes to --heading rather
+   than taking the accent's color, so the entry reads as the same text,
+   underlined, in either theme. */
+.toc-item:hover {
+  color: var(--heading);
+  border-bottom-color: var(--accent);
+}
+
+.toc-item:focus-visible {
+  outline: 2px solid var(--chrome-text);
+  outline-offset: 3px;
+}

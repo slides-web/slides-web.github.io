@@ -1,0 +1,38 @@
+/* The theme switch's sweep: the new theme grows in from the toggle, in a
+   soft-edged circle. js/theme-transition.js runs the switch inside a view
+   transition -- the browser's own API, nothing to download -- and sets
+   --theme-sweep-x and --theme-sweep-y to the toggle's center; these rules
+   animate the transition's two snapshots: the new theme is masked by a
+   blurred circle that grows from that point, the old one waits behind it.
+
+   The circle-blur effect of theme-toggle.rdsx.dev, centered on the toggle:
+   the circle sits in the middle of its 48x48 box, and the box grows about
+   its center -- its size and its position animate together. The filter
+   region spans the whole box, so the blur fades out rather than ending on
+   a line. Its timing lives here rather than in tokens.css so the effect
+   stays one removable piece: delete this file's @import in main.css and
+   js/theme-transition.js's script tag, and the theme switches at once
+   again. */
+
+:root {
+  --theme-sweep-duration: 1s;
+}
+
+::view-transition-new(root) {
+  mask: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><defs><filter id="blur" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="2"/></filter></defs><circle cx="24" cy="24" r="18" fill="white" filter="url(%23blur)"/></svg>') var(--theme-sweep-x) var(--theme-sweep-y) / 0 no-repeat;
+  animation: theme-sweep var(--theme-sweep-duration) both;
+}
+
+/* The old theme stays in place behind the new one until the sweep has covered
+   it; its own animation only holds it there for the same time. */
+::view-transition-old(root) {
+  animation: theme-sweep var(--theme-sweep-duration) both;
+  z-index: -1;
+}
+
+@keyframes theme-sweep {
+  to {
+    mask-size: 420vmax;
+    mask-position: calc(var(--theme-sweep-x) - 210vmax) calc(var(--theme-sweep-y) - 210vmax);
+  }
+}

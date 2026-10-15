@@ -1,0 +1,365 @@
+/* The traveling strip and one slide's frame: centering, padding and the
+   slide's own typography. */
+
+.content {
+  position: relative;
+  z-index: 1;
+  /* Every row of .page, not just the middle one: the chrome bands sit over the
+     slide instead of beside it (base.css). */
+  grid-area: 1 / 1 / -1 / -1;
+  /* .content does not clip, so nothing zeroes a grid item's automatic minimum
+     size for it. Without this the box grows to fit every slide and stretches
+     the page past the viewport. */
+  min-height: 0;
+}
+
+/* Nothing on a slide can be selected, as in a slideshow program: text,
+   equations, listings and references alike. Selection only: links, references
+   and contents entries still take their clicks. */
+.slides {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  transition: transform var(--slide-duration) var(--slide-ease);
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.slide {
+  flex: 0 0 100%;
+  height: 100%;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  /* `safe` is not decoration. Every slide centers its content, including its
+     title, and plain `center` overflows a too-tall slide in both directions at
+     once: the top would slide up past the viewport edge and out of reach.
+     `safe` falls back to `start` exactly when the content does not fit, which
+     keeps overflowing content top-aligned after the padding, where it can be
+     scrolled. */
+  justify-content: safe center;
+  align-items: center;
+  text-align: center;
+  /* The title is a sibling of the content, not a header above it, so this gap
+     is what separates them. It is a little wider than the old top-left title
+     needed, because a centered title sits directly on top of its content. */
+  gap: var(--slide-gap);
+  /* Top and bottom follow the window height; left and right follow its width.
+     They answer different questions, so they are sized separately.
+
+     Top and bottom are only an edge margin, far less than the chrome bands.
+     The slide is the whole viewport tall and its content is centered, so an
+     ordinary slide stays clear of the bands by itself; only content taller
+     than the space between them spreads under the transparent header and
+     footer, and only content taller than the viewport scrolls. Nothing peeks
+     from a neighbor: the next slide rests entirely below the viewport, where
+     .page clips it.
+
+     Left and right are symmetric on purpose, even though only the right side
+     has the dot rail to clear: asymmetric padding visibly offsets centered
+     content, and every slide is centered. The right gap to the rail is what sets
+     the size -- about 60px at 1280 -- and the left simply matches it. The
+     floor, 3rem, is the least that still clears the rail on a phone, where
+     the rail sits 16px in from the edge and is 20px wide: 12px of air. From
+     about 980px up this is 5.5rem or more, as it always was. */
+  padding: var(--slide-edge) clamp(3rem, 9vw, 7.5rem);
+}
+
+/* The section rule: a line on the bottom edge of a section's last slide,
+   which is exactly where one section meets the next in the strip. js/sections.js
+   sets .is-crossing only while a move carries it across the screen, so it
+   shows at no rest state. It rides the strip's own transform, at the slide's
+   speed and easing, in both directions, with no animation of its own.
+
+   An inset shadow rather than a border or a pseudo-element. It takes no
+   layout space, so the slide's centering does not move. It needs no
+   positioning. And it is painted on the slide's frame, so it stays on the
+   edge even when an overflowing slide has been scrolled. Full width because
+   the slide is; the chrome and the rail sit above the strip, so it passes
+   under them. At rest it is the same shadow in transparent, so the fade
+   animates the color alone. */
+.slide {
+  box-shadow: inset 0 calc(-1 * var(--section-rule-width)) 0 transparent;
+  transition: box-shadow var(--section-rule-fade) ease;
+}
+
+.slide.is-crossing {
+  box-shadow: inset 0 calc(-1 * var(--section-rule-width)) 0 var(--section-rule-color);
+}
+
+/* The deck's display type, on the title and closing slides only, in --heading
+   like every title. */
+.slide h1 {
+  margin: 0;
+  font-size: clamp(2.75rem, 8vw, 5.5rem);
+  font-weight: 650;
+  line-height: 1.02;
+  letter-spacing: -0.035em;
+  color: var(--heading);
+}
+
+/* Sized as a title rather than a hero: the h1 on the opening slide is the
+   deck's one piece of display type, and a 4rem heading on every slide after it
+   would compete with the content it introduces. */
+.slide h2 {
+  margin: 0;
+  font-size: clamp(1.75rem, 3.5vw, 2.75rem);
+  font-weight: 650;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: var(--heading);
+}
+
+/* A section divider, generated before every named section (js/sections.js):
+   "Section" over a large number, both in the accent, like the contents
+   list's numbers -- 6.0:1 on the page at worst -- then a rule in the accent,
+   the section line's color, and beside it the section's name in display
+   type. The name is set against the rule, so a name that wraps keeps that
+   edge; the pair as a whole is centered, as on every slide. Neither side
+   wraps under the other: a long name shrinks into more lines instead. */
+.divider-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem clamp(1.5rem, 3.5vw, 2.75rem);
+}
+
+.slide .divider-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: none;
+  padding-right: clamp(1.5rem, 3.5vw, 2.75rem);
+  border-right: var(--section-rule-width) solid var(--accent);
+  font-size: clamp(1.4rem, 2.7vw, 2.1rem);
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: 0.02em;
+  color: var(--accent);
+}
+
+.divider-number {
+  font-size: clamp(5rem, 13vw, 9.5rem);
+  font-weight: 650;
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+}
+
+.slide-divider h2 {
+  text-align: left;
+  font-size: clamp(2rem, 5.5vw, 4.25rem);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+}
+
+/* The deck's one breakpoint (toc.css): on a phone the number stands over the
+   name, and the rule turns to lie between them. */
+@media (max-width: 44rem) {
+  .divider-row {
+    flex-direction: column;
+  }
+
+  .slide .divider-section {
+    padding: 0 0 1rem;
+    border-right: 0;
+    border-bottom: var(--section-rule-width) solid var(--accent);
+  }
+
+  .slide-divider h2 {
+    text-align: center;
+  }
+}
+
+.slide p {
+  margin: 0;
+  max-width: 46ch;
+  font-size: clamp(1.05rem, 1.6vw, 1.35rem);
+  line-height: 1.65;
+}
+
+/* Display equations (mathjax/) at the body size above. MathJax sizes an
+   equation from its container's font-size, and .slide sets none, so without
+   this they render at the 16px default -- smaller than the sentences around
+   them. Inline ones already sit inside a p and inherit its size.
+
+   The stretch is load-bearing. .slide centers its children, which shrinks
+   this box to the equation's own width, and then MathJax never sees too
+   little room: displayOverflow (mathjax-setup.js) never acts and a wide equation gives
+   the slide a horizontal scrollbar instead. At full stage width it scales, and
+   a numbered equation's (1) sits at the right margin, as in LaTeX. */
+.slide [data-eq]:not([data-eq-mode="inline"]) {
+  align-self: stretch;
+  font-size: clamp(1.05rem, 1.6vw, 1.35rem);
+}
+
+/* A numbered equation stops at --eq-max, centered, so its number sits near
+   it instead of at the far edge of the stage: MathJax puts the number at the
+   right edge of the box. width rather than stretch, because a flex item with
+   auto margins is not stretched; the auto margins are what center it once
+   the cap applies. An unnumbered one keeps the full width, which only gives
+   a wide equation more room. */
+.slide [data-eq]:not([data-eq-mode="inline"]):not([data-eq-mode="plain"]) {
+  align-self: auto;
+  width: 100%;
+  max-width: var(--eq-max);
+  margin-inline: auto;
+}
+
+/* MathJax gives every display equation 1em above and below. On the slide
+   itself the flex gap already spaces it from its neighbors, and the two
+   stacked left an equation slide ~30px taller than one without -- enough to
+   push a listing, an equation and a note past the stage on a 720px window.
+   Scoped to an equation that is a direct child of the slide: inside a .block
+   the gap is much tighter and MathJax's margin is what keeps it clear.
+   jax and display are both named to outrank MathJax's own rule, which is
+   injected after this stylesheet. */
+.slide > [data-eq] > mjx-container[jax="CHTML"][display="true"] {
+  margin-block: 0;
+}
+
+/* The same for a figure standing on the slide: figure-setup gives every .fig
+   8mm x --fig-scale above and below (12mm, about 45px, at 1.5), to keep it
+   off the paragraphs around it in running text. Here the slide's gap already
+   does that, and both together left a wide band between a title and its
+   figure. Two classes, so it outranks .fig wherever the files are imported. */
+.slide > .fig {
+  margin-block: 0;
+}
+/* Scoped to .slide so it outweighs .slide p above. */
+.slide .subtitle {
+  max-width: 52ch;
+  font-size: clamp(1.15rem, 2vw, 1.6rem);
+}
+
+/* The title slide: an oversized title on two lines, the second -- the h1's
+   <span> -- in the accent; a rule the full width of the group; and under it
+   the subtitle on the left and the byline on the right, its first line, the
+   author, in the title color and the rest in the muted gray, 6.3:1 at worst.
+   The group is set from its own left edge and centered as a whole, as on
+   every slide; on a phone the byline drops under the subtitle. The size
+   suits a title of two short lines: give a longer one a smaller
+   --title-size on .title-page, or it runs past the window. */
+.title-page {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1.25rem, 3vw, 2rem);
+  width: min(100%, 58rem);
+  text-align: left;
+}
+
+.title-page h1 {
+  font-size: var(--title-size, clamp(3rem, 10vw, 7.25rem));
+  line-height: 1;
+  letter-spacing: -0.045em;
+}
+
+.title-page h1 span {
+  display: block;
+  color: var(--accent);
+}
+
+.title-foot {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem 2.5rem;
+  padding-top: clamp(1rem, 2.5vw, 1.5rem);
+  border-top: 2px solid var(--heading);
+}
+
+.title-page .subtitle {
+  max-width: 22ch;
+}
+
+.title-byline {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.15rem;
+  text-align: right;
+}
+
+.slide .title-byline p {
+  max-width: none;
+  font-size: clamp(0.95rem, 1.4vw, 1.15rem);
+  line-height: 1.45;
+  color: var(--chrome-muted);
+}
+
+.slide .title-byline p:first-child {
+  font-size: clamp(1.1rem, 1.7vw, 1.35rem);
+  font-weight: 600;
+  color: var(--heading);
+}
+
+/* The deck's one breakpoint (toc.css). */
+@media (max-width: 44rem) {
+  .title-byline {
+    align-items: flex-start;
+    text-align: left;
+  }
+}
+
+/* The closing slide: the title slide's layout (.title-page), with a link in
+   place of the byline -- an icon and a name, in the title color and
+   underlined in the accent on hover; further links stack under it, centered
+   on each other. It opens in a new tab, so the deck stays where it is.
+   GitHub's mark is drawn black, like a figure, so it flips with the figures
+   in the dark theme (--fig-filter); a colored icon would keep its colors. */
+.slide .closing-links {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.55rem;
+  max-width: none;
+  font-size: clamp(1rem, 1.5vw, 1.2rem);
+  line-height: 1.4;
+}
+
+.closing-links a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45em;
+  font-weight: 600;
+  color: var(--heading);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.2s ease;
+}
+
+.closing-links a:hover {
+  border-bottom-color: var(--accent);
+}
+
+.closing-links a:focus-visible {
+  outline: 2px solid var(--chrome-text);
+  outline-offset: 3px;
+}
+
+.closing-links img {
+  width: auto;
+  height: 1.15em;
+}
+
+.closing-links .icon-mono {
+  filter: var(--fig-filter);
+}
+
+/* The gallery's tag: a line under the title naming the classes and
+   attributes the slide demonstrates, so a viewer knows what to look up in
+   README.md. A caption to the title rather than content, so it sits close
+   under it -- the negative margin takes back most of the slide's gap, and
+   leaves enough that a title's descenders clear it -- in the chrome's muted
+   gray, 6.3:1 on the page at worst. Delete it from a slide you copy. Scoped
+   to .slide so it outweighs .slide p. */
+.slide .tag {
+  max-width: none;
+  margin-top: calc(0.8rem - var(--slide-gap));
+  font-family: var(--font-mono);
+  font-size: clamp(0.8rem, 1.1vw, 0.95rem);
+  line-height: 1.4;
+  color: var(--chrome-muted);
+}

@@ -1,0 +1,175 @@
+/* ============================================================
+   figure-style.css -- figure sizing, captions and numbering
+   ============================================================
+   Full documentation, settings and troubleshooting: README.md
+   in this folder.
+
+   Every selector is scoped to the .fig class and every name
+   starts with fig, so this file cannot affect anything else in
+   a project.
+   ============================================================ */
+
+
+/* ---------- 1. Settings ------------------------------------ */
+:root {
+  --fig-scale: 1.5;           /* the only size number; set by eye */
+  --fig-label: "Fig. ";       /* or "Figure ", "FIGURE " */
+  --fig-sep: ": ";            /* or ". ", " -- " */
+
+  /* Required. Without it CSS gives each caption its own count
+     and every figure comes out as number 1. If your project
+     already resets a counter here, merge the two:
+     counter-reset: your-counter fig-counter; */
+  counter-reset: fig-counter;
+}
+
+
+/* ---------- 2. The figure ----------------------------------
+   <figure class="fig" style="--fig-w: 88mm">
+   --fig-w is the figure's own natural width. See README.
+   ----------------------------------------------------------- */
+.fig {
+  width: calc(var(--fig-w) * var(--fig-scale));
+  max-width: 100%;            /* only acts when the window is too narrow
+                                 to honor the width above */
+  margin: calc(8mm * var(--fig-scale)) auto;
+  text-align: center;
+  scroll-margin-top: calc(8mm * var(--fig-scale));
+}
+
+.fig img {
+  width: 100%;                /* the image fills the figure */
+  height: auto;               /* keeps the aspect ratio */
+  max-width: 100%;
+  filter: var(--fig-filter, none);  /* a dark theme sets this; see section 8 */
+}
+
+
+/* ---------- 3. Height-driven figures -----------------------
+   <figure class="fig fig-h" style="--fig-h: 60mm">
+   A modifier, used together with .fig, for when vertical space
+   is the constraint.
+
+   The height is only honored while the width it implies fits.
+   Clamping the width while the height stays fixed would leave
+   an SVG floating in a tall empty box, and squash a photograph.
+   So once figure-reference.js has read the file's proportions
+   into --fig-ratio (width over height), the figure is sized by
+   width instead: the width --fig-h asks for, or all the room
+   there is, whichever is less, and the height follows. Until
+   then, and without the script, the height alone applies.
+   ----------------------------------------------------------- */
+.fig.fig-h {
+  width: fit-content;
+}
+
+.fig.fig-h img {
+  width: auto;
+  height: calc(var(--fig-h) * var(--fig-scale));
+}
+
+.fig.fig-h.fig-has-ratio {
+  width: min(100%, calc(var(--fig-h) * var(--fig-scale) * var(--fig-ratio)));
+}
+
+.fig.fig-h.fig-has-ratio img {
+  width: 100%;
+  height: auto;
+}
+
+
+/* ---------- 4. Caption -------------------------------------
+   8 pt is a physical size, so it matches 8 pt text set inside
+   a figure at any value of --fig-scale.
+
+   No font-family is set: the caption inherits the page's. For
+   the two to match, the text inside the figure has to use the
+   same family the page does.
+   ----------------------------------------------------------- */
+.fig figcaption {
+  max-width: calc(120mm * var(--fig-scale));
+  margin-inline: auto;
+  margin-top: calc(2mm * var(--fig-scale));
+  font-size: calc(8pt * var(--fig-scale));
+  /* Alternatives for a page that does not size its type in points:
+       font-size: 0.8em;   0.8 is the 8 pt over 10 pt ratio of an
+                           IEEEtran caption to its body text
+       no font-size;       caption inherits, matching body text
+     Both give up the exact match with 8 pt text inside a figure. */
+}
+
+
+/* ---------- 5. Numbering -----------------------------------
+   Counted by the caption, not the figure, so an uncaptioned
+   figure is skipped. The counter is reset in section 1.
+   ----------------------------------------------------------- */
+.fig figcaption {
+  counter-increment: fig-counter;
+}
+
+.fig figcaption::before {
+  content: var(--fig-label) counter(fig-counter) var(--fig-sep);
+}
+
+
+/* ---------- 6. A figure without a caption ------------------
+   <figure class="fig fig-no-caption" ...>  or just leave the
+   <figcaption> out. Either way it is skipped in the numbering.
+   ----------------------------------------------------------- */
+.fig-no-caption figcaption {
+  display: none;
+}
+
+
+/* ---------- 7. Cross-references ----------------------------
+   <a class="fig-ref" href="#fig-power"></a>
+   Empty in the markup; figure-reference.js fills it in.
+   The color of the sentence it sits in, like a reference in
+   a paper; only the hover underline and the pointer say it can
+   be clicked.
+   ----------------------------------------------------------- */
+/* nowrap is LaTeX's Fig.~\ref: the label and its number never
+   part across a line break. */
+.fig-ref {
+  color: inherit;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.fig-ref[href]:hover {
+  text-decoration: underline;
+}
+
+/* with FIG_REF_CLICKABLE false, the script removes the href */
+.fig-ref:not([href]) {
+  color: inherit;
+  cursor: default;
+}
+
+
+/* ---------- 8. Dark themes ---------------------------------
+   Figures are usually exported dark-on-white or dark-on-
+   transparent, which vanishes on a dark page. A page with a
+   dark theme sets, in that theme only:
+
+     --fig-filter: invert(0.9) hue-rotate(180deg);
+
+   invert turns the figure's lightness over and hue-rotate swings
+   each color back to its own hue, so dark text turns light and
+   every curve becomes a lighter version of itself. The caption is
+   page text and is never filtered.
+
+   <figure class="fig fig-keep-colors" ...> opts one figure out:
+   a photograph, or anything whose exact colors matter. It keeps
+   its colors and sits on a light card instead, drawn by a spread
+   shadow so the figure's box -- and its size -- does not change.
+   The page sets --fig-paper (the card color, transparent where
+   no card is wanted), --fig-paper-pad and --fig-paper-radius.
+   Without any of them, nothing here does anything.
+   ----------------------------------------------------------- */
+.fig.fig-keep-colors img {
+  filter: none;
+  background: var(--fig-paper, transparent);
+  box-shadow: 0 0 0 var(--fig-paper-pad, 0) var(--fig-paper, transparent);
+  border-radius: var(--fig-paper-radius, 0);
+}

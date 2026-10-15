@@ -1,0 +1,164 @@
+/* The two chrome bands: header, footer, logo, theme toggle, stepper and
+   counter. */
+
+/* Transparent overlays, not walls: .page lays them over the top and bottom
+   rows of the slide (base.css), so a slide spreading into a band stays
+   visible through it, and z-index keeps the band's own contents on top.
+
+   pointer-events is off on the bands and back on only for the two controls
+   they hold, the stepper and the theme toggle. A transparent band is still a
+   box, and without this it would swallow clicks on any slide content that
+   reaches under it. */
+.header,
+.footer {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  color: var(--chrome-text);
+  pointer-events: none;
+  /* No vertical padding: the grid row sets the height, align-items centers the
+     contents, and the 28px stepper is the tallest thing that has to fit. */
+  padding: 0 var(--chrome-pad);
+}
+
+.header {
+  grid-area: 1 / 1;
+}
+
+.footer {
+  grid-area: 3 / 1;
+}
+
+.header p {
+  margin: 0;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--chrome-muted);
+}
+
+/* The section name and the theme toggle sit together at the right: the auto
+   margin takes all the free space in the space-between row. Two classes, so it
+   outranks the margin: 0 of .header p just above. */
+.header .section-label {
+  margin-inline-start: auto;
+}
+
+/* Up and down, because that is the way the strip actually travels -- the same
+   directions the arrow keys drive. Both buttons are disabled at the ends of the
+   deck, matching goToSlide's refusal to wrap around. */
+.stepper {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  pointer-events: auto;
+}
+
+/* The visible arrow is 28px, under the ~44px a fingertip needs. Growing the
+   button would change the design, so instead the hit area is pushed past the
+   box with a transparent pseudo-element, which changes the tap target and
+   nothing else. Even the shortest band, 48px, holds the whole 44px area.
+
+   Vertical reach is the full 8px each way; horizontal is held to 3px because
+   .stepper's gap is 6px, and two hit areas that overlapped would start handing
+   taps to the wrong arrow. The rail's dots are deliberately left alone: growing
+   them to 44px would wreck the 14px box and halo geometry the rail depends on,
+   and with a swipe available they are no longer anyone's only way through.
+
+   The theme toggle in the header is the same button, so it shares every rule
+   here but the disabled state, which it never has. */
+.step,
+.theme-toggle {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 1px solid var(--chrome-line);
+  border-radius: 8px;
+  background: none;
+  color: var(--chrome-muted);
+  cursor: pointer;
+  transition:
+    color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.step::before,
+.theme-toggle::before {
+  content: '';
+  position: absolute;
+  inset: -8px -3px;
+}
+
+.step svg,
+.theme-toggle svg {
+  display: block;
+  width: 16px;
+  height: 16px;
+}
+
+.step:hover:not(:disabled),
+.theme-toggle:hover {
+  color: var(--chrome-text);
+  border-color: var(--dot-hover);
+}
+
+.step:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.step:focus-visible,
+.theme-toggle:focus-visible {
+  outline: 2px solid var(--chrome-text);
+  outline-offset: 2px;
+}
+
+/* The explicit height is not optional: the SVG declares its size in
+   millimeters, so an <img> with no CSS size lays it out at that physical size.
+   width: auto then takes the ratio from the viewBox. On every slide, the title
+   slide included. */
+.brand-mark {
+  display: block;
+  height: 22px;
+  width: auto;
+}
+
+/* A control in a band that ignores the pointer (see the top of this file). It
+   shows the theme it switches to: the moon while light, the sun while dark.
+   Swapped here from data-theme, which js/theme-boot.js sets from <head> before
+   the first paint, so the icon is right before the toggle is wired. */
+.theme-toggle {
+  pointer-events: auto;
+}
+
+.theme-toggle .icon-sun,
+:root[data-theme="dark"] .theme-toggle .icon-moon {
+  display: none;
+}
+
+:root[data-theme="dark"] .theme-toggle .icon-sun {
+  display: block;
+}
+
+.slide-counter {
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  letter-spacing: 0.08em;
+  font-variant-numeric: tabular-nums;
+  color: var(--chrome-muted);
+  transition: opacity var(--rail-duration) var(--rail-ease);
+}
+
+/* Hidden on the title slide (js/status.js), with the rail's motion. The class
+   is in the markup too, so the placeholder never shows before the script. */
+.slide-counter.is-hidden {
+  opacity: 0;
+}

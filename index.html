@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Slides on the Web</title>
+  <link rel="icon" type="image/svg+xml" href="fig/favicon.svg">
+  <!-- Sets the theme before the first paint: keep it here, blocking, ahead of the stylesheet. -->
+  <script src="js/theme-boot.js"></script>
+  <link rel="stylesheet" href="css/main.css">
+</head>
+
+<body>
+  <div class="page">
+    <header class="header">
+      <img class="brand-mark" src="fig/logo.svg" alt="page-logo">
+      <p class="section-label" aria-live="polite"></p>
+      <button type="button" class="theme-toggle" aria-label="Dark theme" aria-pressed="false">
+        <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round"></path>
+        </svg>
+        <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="2"></circle>
+          <path
+            d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4"
+            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+        </svg>
+      </button>
+    </header>
+
+    <main class="content">
+      <!-- One <section class="slide"> per slide; never wrap slides in another element. -->
+      <div class="slides eq-hidden-until-ready">
+        <!-- Title slide (.title-page): no data-section. README: Content. -->
+        <section class="slide">
+          <div class="title-page">
+            <h1>Slides <span>on the Web</span></h1>
+            <div class="title-foot">
+              <p class="subtitle">Ready-made slides to copy and edit.</p>
+              <div class="title-byline">
+                <p>CONICET</p>
+                <p>Research Institute of Electrical Engineering</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Contents: the list is filled in by js/toc.js. README: Slides and sections. -->
+        <section class="slide">
+          <h2>Contents</h2>
+          <ol class="toc"></ol>
+        </section>
+
+        <!-- Blocks side by side (.columns). README: Layouts. -->
+        <section class="slide" data-section="Layouts and Animations">
+          <h2>Blocks side by side</h2>
+          <p class="tag">columns · block</p>
+          <div class="columns">
+            <div class="block">
+              <h3>Side by side</h3>
+              <p>Each block takes an equal share of the row. On a narrow screen they stack by
+                themselves.</p>
+            </div>
+            <div class="block">
+              <h3>A card</h3>
+              <p>A block is a raised card.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Blocks stacked (.rows). README: Layouts. -->
+        <section class="slide" data-section="Layouts and Animations">
+          <h2>Stacked</h2>
+          <p class="tag">rows · block</p>
+          <div class="rows">
+            <div class="block">
+              <h3>Blocks one above the other</h3>
+              <p>The same blocks, stacked however wide the screen gets.</p>
+            </div>
+            <div class="block">
+              <h3>A tighter gap</h3>
+              <p>Vertical space is the scarce one, so stacked blocks sit closer together.</p>
+            </div>
+            <div class="block">
+              <h3>Three or more</h3>
+              <p>Every block added joins the stack, at the full width of the row.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- A two-column grid (.grid), a wide block above two that arrive together. README: Layouts, Steps. -->
+        <section class="slide" data-section="Layouts and Animations">
+          <h2>A grid</h2>
+          <p class="tag">grid · block-wide · data-reveal</p>
+          <div class="grid">
+            <div class="block block-wide" data-reveal>
+              <h3>Two columns and two rows</h3>
+              <p>A wide block spans the whole row.</p>
+            </div>
+            <div class="block" data-reveal="2">
+              <h3>Arriving together</h3>
+              <p>These two share a step, so one press brings both.</p>
+            </div>
+            <div class="block" data-reveal="2">
+              <h3>Waiting in place</h3>
+              <p>Until then they show as faint shapes, so nothing moves when they arrive.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- One item per press (data-reveal="each"). README: Steps. -->
+        <section class="slide" data-section="Layouts and Animations">
+          <h2>One item at a time</h2>
+          <p class="tag">lines · data-reveal="each"</p>
+          <ul class="lines" data-reveal="each">
+            <li>The first item is already there when the slide arrives.</li>
+            <li>Each press brings the next; the rest wait.</li>
+            <li>The counter and the rail stay fixed: a step is not a slide.</li>
+            <li>Come back from the next slide and every item is already shown.</li>
+          </ul>
+        </section>
+
+        <!-- The newest item in the highlight color (data-reveal-alert). README: Steps. -->
+        <section class="slide" data-section="Layouts and Animations">
+          <h2>Highlighting the last one</h2>
+          <p class="tag">lines · data-reveal-alert</p>
+          <ul class="lines" data-reveal="each" data-reveal-alert>
+            <li>The item that has just arrived takes the highlight color.</li>
+            <li>It returns to normal as soon as the next one comes.</li>
+            <li>Step back and the item before it is highlighted again.</li>
+            <li>Put it on one list, one slide, or the whole deck.</li>
+          </ul>
+        </section>
+
+        <!-- Only the newest item at full strength (data-reveal-focus). README: Steps. -->
+        <section class="slide" data-section="Layouts and Animations">
+          <h2>In focus</h2>
+          <p class="tag">bullets · data-reveal-focus</p>
+          <ul class="bullets" data-reveal="each" data-reveal-focus>
+            <li>The item that has just arrived is at full strength.</li>
+            <li>The ones before it step back, still there to read.</li>
+            <li>The ones still to come wait as faint shapes.</li>
+            <li>Step back and the focus returns to the item before.</li>
+          </ul>
+        </section>
+
+        <!-- Hidden, then fade and glide in (data-reveal-motion). README: Steps. -->
+        <section class="slide" data-section="Layouts and Animations">
+          <h2>Arriving in motion</h2>
+          <p class="tag">columns · data-reveal-motion</p>
+          <div class="columns" data-reveal-motion>
+            <div class="block block-wide" data-reveal>
+              <h3>Hidden until their turn</h3>
+              <p>Nothing on the slide says more is coming, so use it to surprise the audience.</p>
+            </div>
+            <div class="block" data-reveal="2">
+              <h3>Fade</h3>
+              <p>Hidden, not ghosted, then brought to full opacity.</p>
+            </div>
+            <div class="block" data-reveal="2">
+              <h3>Glide</h3>
+              <p>It waits a little to the left, then glides into place.</p>
+            </div>
+            <div class="block" data-reveal="2">
+              <h3>Stagger</h3>
+              <p>Each block starts a moment after.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Lines rising through a mask (data-reveal-rise), beside a block with a numbered list (ol.bullets). README: Layouts, Content, Steps. -->
+        <section class="slide" data-section="Layouts and Animations">
+          <h2>Rising into place</h2>
+          <p class="tag">columns · bullets · data-reveal-rise</p>
+          <div class="columns">
+            <div class="block">
+              <h3>A small-signal study</h3>
+              <ol class="bullets">
+                <li>Model the converter in the dq frame</li>
+                <li>Linearize at the operating point</li>
+                <li>Compute the eigenvalues</li>
+                <li>Read the damping of each mode</li>
+                <li>Rank the states by participation</li>
+              </ol>
+            </div>
+            <div class="rows">
+              <div data-reveal-rise>
+                <p data-reveal="2">Each line waits below its place, blurred and hidden.</p>
+              </div>
+              <div data-reveal-rise>
+                <p data-reveal="3">A press lifts it into place, sharpening as it comes.</p>
+              </div>
+              <div data-reveal-rise>
+                <p data-reveal="4">Step back, and it sinks out of sight again.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- A marker sweeping in behind a phrase (<mark data-reveal>). README: Steps. -->
+        <section class="slide" data-section="Layouts and Animations">
+          <h2>Marking a phrase</h2>
+          <p class="tag">mark · data-reveal</p>
+          <p>Every slide is centered on both axes, <mark data-reveal="2">title included</mark>. It
+            carries no number: <mark data-reveal="3">the counter, the rail and the contents
+              list</mark> count the slides for you.</p>
+        </section>
+
+        <!-- A block beside a figure (.split). README: Layouts, Figures. -->
+        <section class="slide" data-section="Figures">
+          <h2>A figure beside text</h2>
+          <p class="tag">split · fig</p>
+          <div class="split">
+            <div class="block">
+              <ul class="bullets" data-reveal="each">
+                <li>A figure is drawn at the width its own file declares, 88 mm here.</li>
+                <li>The caption is automatically numbered, in the order the figures appear.</li>
+                <li>The block beside it takes whatever width is left.</li>
+              </ul>
+            </div>
+            <figure class="fig" id="fig-Network39" style="--fig-w: 88mm">
+              <img src="fig/fig-Network39.svg" alt="Network diagram">
+              <figcaption>IEEE 39-bus test system.</figcaption>
+            </figure>
+          </div>
+        </section>
+
+        <!-- A figure alone, sized by width (.fig). README: Figures. -->
+        <section class="slide" data-section="Figures">
+          <h2>A figure occupying the whole slide</h2>
+          <figure class="fig" id="fig-WTcontrolSystem" style="--fig-w: 176mm">
+            <img src="fig/fig-WTcontrolSystem.svg" alt="WT control system">
+            <figcaption>Grid-forming type-IV wind turbine.</figcaption>
+          </figure>
+        </section>
+
+        <!-- A figure sized by height (.fig-h) beside two highlighted blocks, with references. README: Figures, Content. -->
+        <section class="slide" data-section="Figures">
+          <h2>Referring to a figure</h2>
+          <p class="tag">split · fig-h · fig-ref · block-highlight-a · block-highlight-b</p>
+          <div class="split">
+            <div class="rows">
+              <div class="block block-highlight-a">
+                <p>As shown in <a class="fig-ref" href="#fig-MultiLine"></a>, a reference prints the number for you. See <a class="fig-ref" href="#fig-Network39"></a>.</p>
+              </div>
+              <div class="block block-highlight-b">
+                <p>You can also size a figure by its height, which is ideal for placing it next to text.</p>
+              </div>
+            </div>
+            <figure class="fig fig-h" id="fig-MultiLine" style="--fig-h: 90mm">
+              <img src="fig/fig-MultiLine.svg" alt="Time-domain simulation">
+              <figcaption>Time-domain simulation.</figcaption>
+            </figure>
+          </div>
+        </section>
+
+        <!-- A figure with no caption or number (.fig-no-caption) beside blocks in motion. README: Figures, Steps. -->
+        <section class="slide" data-section="Figures">
+          <h2>A figure without a caption</h2>
+          <p class="tag">split · fig-no-caption · data-reveal-motion</p>
+          <div class="split">
+            <figure class="fig fig-no-caption" style="--fig-w: 87.091mm">
+              <img src="fig/fig-Network118.svg" alt="Network diagram">
+            </figure>
+            <div class="rows" data-reveal-motion>
+              <div class="block" data-reveal="2">
+                <h3>No caption</h3>
+                <p>So the figure takes no number either.</p>
+              </div>
+              <div class="block" data-reveal="2">
+                <h3>Figure first, and then the blocks</h3>
+                <p>It stands alone when the slide arrives. One press brings both.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Numbered steps joined by arrows (.process). README: Layouts. -->
+        <section class="slide" data-section="Equations">
+          <h2>An equation in three steps</h2>
+          <p class="tag">process · block</p>
+          <ol class="process" data-reveal="each">
+            <li class="block">
+              <h3>Store</h3>
+              <p>Paste the LaTeX into an equations file, under a key.</p>
+            </li>
+            <li class="block">
+              <h3>Place</h3>
+              <p>Leave an empty element carrying that key where the equation belongs.</p>
+            </li>
+            <li class="block">
+              <h3>Refer</h3>
+              <p>Cite it from any sentence. The number is automatically filled.</p>
+            </li>
+          </ol>
+        </section>
+
+        <!-- A numbered equation (data-eq) and its reference. README: Equations. -->
+        <section class="slide" data-section="Equations">
+          <h2>Numbered</h2>
+          <p class="tag">data-eq</p>
+          <div data-eq="park"></div>
+          <p>Numbered for you, and cited from any sentence as (\ref{eq:park}).</p>
+        </section>
+
+        <!-- Unnumbered, inline, and a symbol typed in place (data-eq-mode). README: Equations. -->
+        <section class="slide" data-section="Equations">
+          <h2>Unnumbered and inline</h2>
+          <p class="tag">columns · data-eq-mode</p>
+          <div class="columns" data-reveal="each">
+            <div class="block">
+              <h3>On a line of its own</h3>
+              <div data-eq="bhaskara" data-eq-mode="plain"></div>
+            </div>
+            <div class="block">
+              <h3>In a sentence</h3>
+              <p>The damping ratio <span data-eq="zeta" data-eq-mode="inline"></span> follows
+                from the shaft stiffness.</p>
+            </div>
+            <div class="block">
+              <h3>Typed in place</h3>
+              <p>A single symbol can be typed straight into the text: <code>\(\theta_s\)</code>
+                gives \(\theta_s\).</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- A colored term and a system of equations, stacked (.rows). README: Equations. -->
+        <section class="slide" data-section="Equations">
+          <h2>Color and systems</h2>
+          <p class="tag">rows · data-eq</p>
+          <div class="rows" data-reveal="each">
+            <div class="block">
+              <div data-eq="vdc"></div>
+              <p>Three colors are defined in light and dark modes:
+                \({\color{colMyRed}\omega_n}\), \({\color{colMyBlue}\zeta}\), and \({\color{colMyGreen}\theta_s}\).</p>
+            </div>
+            <div class="block">
+              <div data-eq="pq"></div>
+              <p>Each row has its own number: (\ref{eq:pq1}) and (\ref{eq:pq2}). Go to (\ref{eq:park}).</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- An equation (data-eq) over the two code listings (pre.code) that place it, its HTML and its JS, side by side (.split); a marked phrase (<mark>) and footnotes (.fn, .footnote). README: Equations, Layouts, Content. -->
+        <section class="slide" data-section="Equations">
+          <h2>Code, marks and footnotes</h2>
+          <p class="tag">data-eq · split · code · mark · fn · footnote</p>
+          <div data-eq="bhaskara"></div>
+          <div class="split">
+            <pre class="code" data-file="index.html">&lt;div data-eq="<b>bhaskara</b>"&gt;&lt;/div&gt;</pre>
+            <pre class="code" data-file="eqn/equations-control.js"><b>bhaskara</b>: String.raw`
+\frac{{ - b \pm \sqrt {{b^2} - 4ac} }}{{2a}}
+`</pre>
+          </div>
+          <p>A listing keeps the file's own lines<sup class="fn"></sup>, <mark>a marked phrase</mark>
+            stands out, and a marker takes the next number<sup class="fn"></sup>.</p>
+          <p class="footnote">Bold picks out the part the slide is about.</p>
+          <p class="footnote">Numbering starts again on every slide, and the notes sit above the footer.</p>
+        </section>
+
+        <!-- Titled blocks, Beamer's block, alertblock and exampleblock (.block-titled, .block-alert, .block-example). README: Content. -->
+        <section class="slide" data-section="Equations">
+          <h2>Definition, theorem, example</h2>
+          <p class="tag">block-titled · block-alert · block-example</p>
+          <div class="columns">
+            <div class="block block-titled">
+              <h3>Definition</h3>
+              <p>The damping ratio of a mode \(\lambda = \sigma \pm j\omega\) is
+                \(\zeta = -\sigma / \sqrt{\sigma^2 + \omega^2}\).</p>
+            </div>
+            <div class="block block-alert">
+              <h3>Theorem</h3>
+              <p>A system is stable if every eigenvalue has a negative real part.</p>
+            </div>
+            <div class="block block-example">
+              <h3>Example</h3>
+              <p>\(\lambda = -0.93 \pm j9.35\) gives \(\zeta = 0.099\): stable, but poorly
+                damped.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- A nomenclature: two grouped tables (.table) in a .columns bed. README: Content. -->
+        <section class="slide" data-section="Equations">
+          <h2>Nomenclature</h2>
+          <p class="tag">table · columns</p>
+          <div class="columns">
+            <table class="table">
+              <tbody>
+                <tr class="table-group">
+                  <th colspan="2" scope="rowgroup">Park transform</th>
+                </tr>
+                <tr>
+                  <th scope="row">\(\mathbf{P}\)</th>
+                  <td>Park transformation matrix</td>
+                </tr>
+                <tr>
+                  <th scope="row">\(\theta_s\)</th>
+                  <td>angle of the rotating reference frame</td>
+                </tr>
+              </tbody>
+              <tbody>
+                <tr class="table-group">
+                  <th colspan="2" scope="rowgroup">DC link and PMSG</th>
+                </tr>
+                <tr>
+                  <th scope="row">\(C_{dc}\)</th>
+                  <td>DC-link capacitance</td>
+                </tr>
+                <tr>
+                  <th scope="row">\(v_{dc}\)</th>
+                  <td>DC-link voltage</td>
+                </tr>
+                <tr>
+                  <th scope="row">\(\omega_B\)</th>
+                  <td>base angular frequency</td>
+                </tr>
+                <tr>
+                  <th scope="row">\(\omega_r\)</th>
+                  <td>rotor speed</td>
+                </tr>
+                <tr>
+                  <th scope="row">\(\Psi_m\)</th>
+                  <td>permanent-magnet flux linkage</td>
+                </tr>
+                <tr>
+                  <th scope="row">\(i_{sq}\)</th>
+                  <td>stator current, q axis</td>
+                </tr>
+                <tr>
+                  <th scope="row">\(p_c\)</th>
+                  <td>converter power</td>
+                </tr>
+              </tbody>
+            </table>
+            <table class="table">
+              <tbody>
+                <tr class="table-group">
+                  <th colspan="2" scope="rowgroup">Power transfer</th>
+                </tr>
+                <tr>
+                  <th scope="row">\(p_v\), \(q_v\)</th>
+                  <td>active and reactive power</td>
+                </tr>
+                <tr>
+                  <th scope="row">\(E_v\)</th>
+                  <td>internal voltage magnitude</td>
+                </tr>
+                <tr>
+                  <th scope="row">\(V_e\)</th>
+                  <td>grid voltage magnitude</td>
+                </tr>
+                <tr>
+                  <th scope="row">\(\delta\)</th>
+                  <td>angle between the two voltages</td>
+                </tr>
+                <tr>
+                  <th scope="row">\(R_t\), \(X_t\)</th>
+                  <td>total resistance and reactance</td>
+                </tr>
+              </tbody>
+              <tbody>
+                <tr class="table-group">
+                  <th colspan="2" scope="rowgroup">Drive train</th>
+                </tr>
+                <tr>
+                  <th scope="row">\(\zeta\)</th>
+                  <td>damping ratio</td>
+                </tr>
+                <tr>
+                  <th scope="row">\(D_{tr}\)</th>
+                  <td>drive-train damping</td>
+                </tr>
+                <tr>
+                  <th scope="row">\(K_{tr}\)</th>
+                  <td>shaft stiffness</td>
+                </tr>
+                <tr>
+                  <th scope="row">\(\omega_{Br}\)</th>
+                  <td>base rotor speed</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- A table of results (.table-data) with one row highlighted (.table-highlight). README: Content. -->
+        <section class="slide" data-section="Results">
+          <h2>Participation Factors</h2>
+          <p class="tag">table · table-data · table-highlight</p>
+          <div class="table-data">
+            <table class="table">
+              <tbody>
+                <tr class="table-group">
+                  <th scope="col">#</th>
+                  <th scope="col">real</th>
+                  <th scope="col">imag</th>
+                  <th scope="col">\(T_s\) [s]</th>
+                  <th scope="col">\(\zeta\)</th>
+                  <th scope="col">\(f_n\) [Hz]</th>
+                  <th scope="col">PF1</th>
+                  <th scope="col">PF2</th>
+                  <th scope="col">PF3</th>
+                  <th scope="col">PF4</th>
+                </tr>
+                <tr>
+                  <th scope="row">1</th>
+                  <td>-0.2149</td>
+                  <td>0</td>
+                  <td>18.62</td>
+                  <td>1</td>
+                  <td>0.0342</td>
+                  <td>\(\omega_t\)(83.1%)</td>
+                  <td>\(\omega_r\)(16.7%)</td>
+                  <td>\(\gamma_{tr}\)(0.1%)</td>
+                  <td>\(i_{sq}\)(0.1%)</td>
+                </tr>
+                <tr>
+                  <th scope="row">2</th>
+                  <td>-4</td>
+                  <td>0</td>
+                  <td>1</td>
+                  <td>1</td>
+                  <td>0.6366</td>
+                  <td>\(\beta\)(100%)</td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+                <tr class="table-highlight">
+                  <th scope="row">3,4</th>
+                  <td>-0.9317</td>
+                  <td>±9.345</td>
+                  <td>4.293</td>
+                  <td><strong>0.09921</strong></td>
+                  <td>1.495</td>
+                  <td>\(\gamma_{tr}\)(49.9%)</td>
+                  <td>\(\omega_r\)(41.3%)</td>
+                  <td>\(\omega_t\)(8.3%)</td>
+                  <td>\(i_{sq}\)(0.3%)</td>
+                </tr>
+                <tr>
+                  <th scope="row">5,6</th>
+                  <td>-15.91</td>
+                  <td>±15.36</td>
+                  <td>0.2515</td>
+                  <td>0.7193</td>
+                  <td>3.519</td>
+                  <td>\(v_{dc}\)(47.4%)</td>
+                  <td>\(x_{dc}\)(40.7%)</td>
+                  <td>\(i_{sq}\)(5.6%)</td>
+                  <td>\(i_{sq}^\text{ref}\)(4.6%)</td>
+                </tr>
+                <tr>
+                  <th scope="row">7,8</th>
+                  <td>-43.06</td>
+                  <td>±45.17</td>
+                  <td>0.09288</td>
+                  <td>0.69</td>
+                  <td>9.933</td>
+                  <td>\(\hat\phi_h\)(49.7%)</td>
+                  <td>\(x_l\)(48.9%)</td>
+                  <td></td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <th scope="row">9,10</th>
+                  <td>-68.85</td>
+                  <td>±101.1</td>
+                  <td>0.0581</td>
+                  <td>0.5627</td>
+                  <td>19.47</td>
+                  <td>\(i_{sq}\)(37.6%)</td>
+                  <td>\(x_{sq}\)(30.2%)</td>
+                  <td>\(v_{dc}\)(18.7%)</td>
+                  <td>\(i_{sq}^\text{ref}\)(11%)</td>
+                </tr>
+                <tr>
+                  <th scope="row">11,12</th>
+                  <td>-111.1</td>
+                  <td>±111.1</td>
+                  <td>0.03601</td>
+                  <td>0.7071</td>
+                  <td>25</td>
+                  <td>\(x_{sd}\)(50%)</td>
+                  <td>\(i_{sd}\)(50%)</td>
+                  <td></td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <th scope="row">13</th>
+                  <td>-303.4</td>
+                  <td>0</td>
+                  <td>0.01319</td>
+                  <td>1</td>
+                  <td>48.28</td>
+                  <td>\(i_{sq}^\text{ref}\)(63.5%)</td>
+                  <td>\(i_{sq}\)(13.1%)</td>
+                  <td>\(x_{sq}\)(11.8%)</td>
+                  <td>\(v_{dc}\)(11%)</td>
+                </tr>
+                <tr>
+                  <th scope="row">14,15</th>
+                  <td>-407.3</td>
+                  <td>±380.7</td>
+                  <td>0.009821</td>
+                  <td>0.7305</td>
+                  <td>88.73</td>
+                  <td>\(x_{cq}\)(46.6%)</td>
+                  <td>\(i_{cQ}\)(37.6%)</td>
+                  <td>\(i_{eQ}\)(8.5%)</td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <th scope="row">16,17</th>
+                  <td>-443.9</td>
+                  <td>±444.7</td>
+                  <td>0.009012</td>
+                  <td>0.7064</td>
+                  <td>100</td>
+                  <td>\(x_{cd}\)(47.2%)</td>
+                  <td>\(i_{cD}\)(46%)</td>
+                  <td>\(x_{cq}\)(4.6%)</td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <th scope="row">18</th>
+                  <td>-1.516e+05</td>
+                  <td>0</td>
+                  <td>2.638e-05</td>
+                  <td>1</td>
+                  <td>2.413e+04</td>
+                  <td>\(i_{eD}\)(96.2%)</td>
+                  <td>\(i_{cD}\)(3.4%)</td>
+                  <td>\(i_{eQ}\)(0.4%)</td>
+                  <td>\(i_{cQ}\)(0%)</td>
+                </tr>
+                <tr>
+                  <th scope="row">19</th>
+                  <td>-2.088e+05</td>
+                  <td>0</td>
+                  <td>1.916e-05</td>
+                  <td>1</td>
+                  <td>3.323e+04</td>
+                  <td>\(i_{eQ}\)(74.8%)</td>
+                  <td>\(i_{cQ}\)(24.7%)</td>
+                  <td>\(i_{eD}\)(0.4%)</td>
+                  <td>\(i_{cD}\)(0.1%)</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- Key results: big numbers with a short label (.results). README: Layouts. -->
+        <section class="slide" data-section="Results">
+          <h2>Key results</h2>
+          <p class="tag">results</p>
+          <ul class="results">
+            <li><b>19</b> eigenvalues in the model</li>
+            <li><b>0.099</b> lowest damping ratio, modes 3,4</li>
+            <li><b>1.5 Hz</b> their natural frequency</li>
+          </ul>
+        </section>
+
+        <!-- Two methods compared, point by point (.pro, .con in a .bullets list). README: Content. -->
+        <section class="slide" data-section="Results">
+          <h2>Two methods compared</h2>
+          <p class="tag">columns · pro · con</p>
+          <div class="columns">
+            <div class="block">
+              <h3>Grid-following</h3>
+              <ul class="bullets">
+                <li class="pro">Simple, mature control</li>
+                <li class="pro">Tracks its power set point closely</li>
+                <li class="con">Needs a stiff grid to lock on to</li>
+                <li class="con">Gives no inertia by itself</li>
+              </ul>
+            </div>
+            <div class="block">
+              <h3>Grid-forming</h3>
+              <ul class="bullets">
+                <li class="pro">Sets its own voltage and frequency</li>
+                <li class="pro">Runs on a weak grid, or alone</li>
+                <li class="con">Current limiting under faults is harder</li>
+                <li class="con">Less field experience</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- Citations in a list (data-cite); every citation in the deck lives in this section. README: Citations. -->
+        <section class="slide" data-section="Citations">
+          <h2>A literature slide</h2>
+          <p class="tag">bullets · data-cite</p>
+          <ul class="bullets">
+            <li>Transient stability with converter-based generation
+              <span data-cite="Avila:27 Rokrok:22 Arachchilage:26"></span>
+            </li>
+            <li>Current limiting under faults <span data-cite="Rokrok:22 Ordono:24"></span></li>
+            <li>Damping of oscillations <span data-cite="Barriendos:25 Xiong:21"></span></li>
+            <li>Grid-forming synchronization <span data-cite="Girona:25"></span></li>
+            <li>Frequency support <span data-cite="Gonzalez:14 Feng:26"></span></li>
+            <li>Grids on 100% renewable energy <span data-cite="Kroposki:17 Park:24 Strunz:23"></span></li>
+            <li>Wind energy conversion <span data-cite="Wu:11"></span></li>
+          </ul>
+          <p>Hover a number to read the full reference.</p>
+        </section>
+
+        <!-- A Beamer frame rebuilt: equations arriving one at a time, the newest in the highlight color (ol.bullets, data-reveal-alert), with a citation and a footnote. README: Steps, Equations, Citations. -->
+        <section class="slide" data-section="Citations">
+          <h2>AC current dynamics</h2>
+          <p class="tag">bullets · data-eq · data-reveal-alert</p>
+          <p>As explained in <span data-cite="Wu:11"></span>, dividing by \({V_B} = {Z_B}{I_B}\) gives<sup class="fn"></sup></p>
+          <ol class="bullets" data-reveal="each" data-reveal-alert>
+            <li><div data-eq="icdq1" data-eq-mode="plain"></div></li>
+            <li><div data-eq="icdq2" data-eq-mode="plain"></div></li>
+            <li><div data-eq="icdq3" data-eq-mode="plain"></div></li>
+            <li><div data-eq="icdq4" data-eq-mode="plain"></div></li>
+          </ol>
+          <p class="footnote">The nominal angular frequency of the AC grid is used as the base frequency \(\omega_B\).</p>
+        </section>
+
+        <!-- Replaced at load by the reference pages. README: Citations. -->
+        <section class="slide" data-section="References" data-bib-placeholder></section>
+
+        <!-- Closing slide (.title-page, .closing-links): no data-section, and it stays last. README: Content. -->
+        <section class="slide">
+          <div class="title-page">
+            <h1>Now build <span>your own</span></h1>
+            <div class="title-foot">
+              <p class="subtitle">Copy a slide and change it!</p>
+              <p class="closing-links">
+                <a href="https://github.com/slides-web/slides-web.github.io" target="_blank" rel="noopener"><img class="icon-mono" src="fig/github.svg" alt="">GitHub</a>
+              </p>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- The rail: filled in by js/rail.js, starts hidden (the title slide has none), and must stay after .slides. -->
+      <nav class="dots is-hidden" aria-label="Slide navigation"></nav>
+    </main>
+
+    <footer class="footer">
+      <nav class="stepper" aria-label="Previous and next slide">
+        <button type="button" class="step" data-step="-1" aria-label="Previous slide">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M6 15l6-6 6 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
+              stroke-linejoin="round"></path>
+          </svg>
+        </button>
+        <button type="button" class="step" data-step="1" aria-label="Next slide">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
+              stroke-linejoin="round"></path>
+          </svg>
+        </button>
+      </nav>
+      <!-- Starts hidden: the title slide shows no counter. -->
+      <span class="slide-counter is-hidden">01/99</span>
+    </footer>
+  </div>
+
+  <!-- Load order: js/dom.js first, js/init.js last of the deck's own, then the MathJax library, so the deck never waits on the network. -->
+  <script src="js/dom.js"></script>
+  <script src="js/sections.js"></script>
+  <script src="js/reveal.js"></script>
+  <script src="js/rail.js"></script>
+  <script src="js/toc.js"></script>
+  <script src="js/label.js"></script>
+  <script src="js/status.js"></script>
+  <script src="js/navigate.js"></script>
+  <script src="js/wheel.js"></script>
+  <script src="js/swipe.js"></script>
+  <script src="js/theme.js"></script>
+  <!-- Optional theme sweep, with css/theme-transition.css: delete both to switch instantly. -->
+  <script src="js/theme-transition.js"></script>
+
+  <!-- citation-setup -->
+  <script src="bib/refs.generated.js"></script>
+  <script src="citation-setup/citations.js"></script>
+
+  <!-- mathjax -->
+  <script src="eqn/equations-system.js"></script>
+  <script src="eqn/equations-control.js"></script>
+  <script src="mathjax/mathjax-setup.js"></script>
+
+  <!-- figure-setup -->
+  <script src="figure-setup/figure-reference.js"></script>
+
+  <script src="js/init.js"></script>
+
+  <!-- mathjax library -->
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@4.1.3/tex-chtml.js"></script>
+
+</body>
+
+</html>

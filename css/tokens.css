@@ -1,0 +1,338 @@
+/* The whole palette. Colors, motion and spacing live here and nowhere
+   else -- tune the deck from this file, never from a rule body.
+
+   Two themes, one set of names. :root holds the light theme, which is also
+   what a page without JavaScript shows; :root[data-theme="dark"] below
+   redefines the color tokens and nothing else. The attribute is set before
+   the first paint by js/theme-boot.js, loaded in index.html's <head> -- the
+   viewer's saved choice, else the system setting -- and flipped by the header
+   toggle (js/theme.js). The rule that keeps this maintainable: every color is
+   a token with a value in BOTH blocks, and a rule body never holds a literal.
+
+   Contrast is measured, not guessed. Every text color below clears 4.5:1 on
+   the page and on all three card fills, in both themes; every UI mark (the
+   accent, the rail dots) clears the 3:1 WCAG 1.4.11 asks of a control. The
+   lowest figures are quoted where each token is set -- re-measure before
+   changing one. */
+
+:root {
+  color-scheme: light;
+
+  /* Neutral grays: the page, the text and the chrome. */
+  --surface: #e6e6e6;
+  --heading: #1a1a1a;
+  --body-text: #333333;
+  --chrome-text: #1a1a1a;
+  /* 5.5:1 on the darkest card, 6.6:1 as a code comment inside a well. 40%
+     gray was tried and failed on the cards (3.6:1); 32% is the lightest that
+     passes everywhere. */
+  --chrome-muted: #525252;
+  --chrome-line: rgba(0, 0, 0, 0.14);
+
+  /* The accent is the logo's blue -- the active dot, the bullet markers, the
+     contents underline. 5.3:1 at worst, well over the 3:1 a mark needs. The
+     halo round the active dot is the accent at 26% over the page, opaque so
+     the rail's line passes behind it; it follows the accent into the dark
+     theme by itself. */
+  --accent: #0054a3;
+  --accent-halo: color-mix(in srgb, var(--accent) 26%, var(--surface));
+
+  /* Cards in front of the page. The fill is only 1.13:1 against --surface, so
+     it reads as a raised card rather than a second background; the lift comes
+     from the shadow, a tight contact layer under a soft ambient one.
+     --body-text measures 8.9:1 or better on all three fills. The two
+     highlights are a pair of peers, named for that job rather than for their
+     hue: a tint of blue (210 degrees) and one of the logo's yellow (45
+     degrees). */
+  --block-surface: #d9d9d9;
+  --block-surface-highlight-a: #c8dbef;
+  --block-surface-highlight-b: #f2dfa6;
+  --block-radius: 14px;
+  --block-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.10),
+    0 10px 24px rgba(0, 0, 0, 0.15);
+  /* The card's inner padding. A titled block's bar reads it too, to reach
+     the card's edges. */
+  --block-pad: clamp(1.25rem, 2.5vw, 1.75rem);
+
+  /* The deck's blue, red and green: the hues of #0d6efd, #dc3545 and #28a745
+     at a deep, quiet lightness and saturation, so they read as ink rather than
+     as signal colors. The same three serve the titled blocks' bars
+     (content.css, Beamer's block, alertblock and exampleblock), the code mark,
+     the red text and the equations below; white text measures 7.8:1 to 8.1:1
+     on the bars. The same hues in both themes, so "the red box" is red either
+     way. */
+  --block-bar: #1f519a;
+  --block-bar-alert: #9a1f2b;
+  --block-bar-example: #1f5c2d;
+  --block-bar-text: #ffffff;
+
+  /* The comparison marks (content.css): the disc behind a .pro check and a
+     .con cross, in the equations' green and the red text. */
+  --mark-pro: var(--eq-green);
+  --mark-con: var(--reveal-alert);
+
+  /* Reference-table rules. Heavier than --chrome-line, which only has to
+     outline the 28px buttons in the chrome; these hold a table together. */
+  --table-line: rgba(0, 0, 0, 0.2);
+  /* A marked table row, LaTeX's \rowcolor: the highlighter's color, so a
+     highlighted row and a marked phrase are the same mark -- the deck's blue
+     here, the gold in the dark theme. Body text 6.7:1 on it over the page
+     (5.4:1 in dark); the row stands 1.5:1 off the page (2.2:1 in dark). */
+  --table-highlight: var(--highlight);
+
+  /* Source listings and inline code (code.css). The fill is white at half
+     strength, so it lightens whatever it sits on rather than being a color
+     of its own. --code-mark is also the equations' blue (--eq-blue below), so
+     a highlighted \color{colMyBlue} reads the same in the listing as in the
+     equation: the bars' blue, 5.5:1 at worst. */
+  --code-surface: rgba(255, 255, 255, 0.5);
+  --code-line: rgba(0, 0, 0, 0.1);
+  --code-mark: #1f519a;
+
+  /* The rail's dots and dashes: 45% black over the page, 3.2:1, and the
+     hover darker still. Mixed with the page rather than translucent, so the
+     rail's line passes behind a mark instead of showing through it.
+     --rail-line is that line: the outline color of the chrome's buttons, a
+     connector rather than a mark. */
+  --dot-idle: color-mix(in srgb, black 45%, var(--surface));
+  --dot-hover: color-mix(in srgb, black 65%, var(--surface));
+  --rail-line: var(--chrome-line);
+
+  /* The deck's red text: the bars' red, 5.7:1 at worst, so it is safe for
+     body text on any fill. colMyRed (--eq-red below), a comparison's cross
+     and the citation module's missing key. The name is the overlay's, which
+     colored its newest step with it until it took the highlight color
+     instead (--reveal-alert-highlight). */
+  --reveal-alert: #9a1f2b;
+
+  /* The alerting variant, data-reveal-alert (reveal.css): the step that has
+     just arrived takes the highlight color, and goes back to normal when the
+     next one arrives. The highlighter's hue at text strength: the accent,
+     the logo's blue here and its sun yellow in the dark theme, as
+     --highlight below is the same hue thinned. 5.3:1 on a card at worst. */
+  --reveal-alert-highlight: var(--accent);
+
+  /* The highlighter, <mark> (content.css, reveal.css): a marker band behind
+     part of a line. It follows the accent, as the dots and markers do: the
+     logo's blue here, its sun yellow in the dark theme. Translucent, so it
+     takes the hue of whatever it sits on -- the accent at 26%, as the
+     active dot's halo is.
+     The band sits under text, so text is what is measured: body text on it
+     6.1:1 at worst, over the page and all three card fills; the band itself
+     stands 1.5:1 off each of them. */
+  --highlight: rgba(0, 84, 163, 0.26);
+
+  /* The equations' colors, as the \definecolor names in
+     mathjax/mathjax-setup.js resolve them. The red and the blue are the red
+     text and the code mark, so a term and a listing that share a color
+     match. The same three hues in both themes -- darker here, lighter
+     in the dark -- because a speaker says "the blue term". Green: the bars'
+     green, 5.6:1 at worst. */
+  --eq-red: var(--reveal-alert);
+  --eq-blue: var(--code-mark);
+  --eq-green: #1f5c2d;
+
+  /* Figures (figure-setup/figure-style.css). In the light theme a figure is
+     drawn exactly as exported. --fig-paper is the card behind a figure that
+     opts out of the dark filter with fig-keep-colors; here it is nothing. */
+  --fig-filter: none;
+  --fig-paper: transparent;
+  --fig-paper-pad: 0.75rem;
+  --fig-paper-radius: 8px;
+
+  --chrome-pad: clamp(1rem, 3vw, 2.25rem);
+
+  /* Header and footer are the same height by construction: both are rows of
+     .page sized by this one token (base.css). The bands are fully transparent
+     and lie over the slide rather than beside it, so this no longer takes
+     anything from the slide -- it only sets how far from the edge the logo,
+     the section name and the stepper sit, and so how tall a slide's content
+     can grow before it reaches them. 48px on a short window, 60px from 800px
+     up, which puts the 28px stepper, the tallest thing in either band, 10px
+     and 16px from the edge. */
+  --chrome-height: clamp(3rem, 7.5vh, 3.75rem);
+
+  /* The widest any slide's content bed gets, however wide the window: the
+     .columns / .rows / .grid / .split arrangements and the reference list all
+     stop here, so every slide's content spans the same width. */
+  --bed-max: 64rem;
+
+  /* The space between a slide's title and its content, and between every
+     item after it: .slide's flex gap (stage.css). The tag under a title
+     (.tag) reads it too, to sit close under the title instead. */
+  --slide-gap: clamp(1.4rem, 2.6vw, 2.4rem);
+
+  /* A slide's top and bottom padding (stage.css): only an edge margin, since
+     the slide is the whole viewport tall and centers its content. A
+     footnote reads it too, to sit just above the footer band. */
+  --slide-edge: clamp(0.5rem, 2vh, 1rem);
+
+  /* The widest line a numbered equation gets (stage.css). MathJax sets the
+     number at the right edge of the equation's box, as LaTeX sets it at the
+     margin of the text column; on a slide the whole stage would be that
+     column, and the number stood some 300px off the equation at 1280. A
+     numbered equation wider than this scrolls, so raise it for a wider one. */
+  --eq-max: 50rem;
+
+  /* Slide motion. The curve is an asymmetric ease-in-out: the second control
+     point sits further left than a symmetric one would put it, which makes
+     the settle at the end longer and gentler than the departure. Everything
+     that moves with a slide change -- the strip, the section name, the rail
+     and the counter -- runs on it, so they leave and land together.
+
+     The slow settle is the point and is kept on purpose. A shorter duration
+     was tried against the stutter of fast presses and put back: it made the
+     ordinary single press worse. js/navigate.js instead ignores a relative
+     move until the strip has landed. The wheel lock in js/wheel.js reads this
+     token, so changing it retunes that too. */
+  --slide-duration: 1.1s;
+  --slide-ease: cubic-bezier(0.65, 0, 0.05, 1);
+
+  /* The section rule (stage.css, js/sections.js): the line along a section's
+     last edge, shown only while the strip carries it across the screen. Thick
+     on purpose, because it marks a whole section rather than one slide. Its
+     motion is the strip's own; only the fade in and out is its own. The color
+     follows --accent into the dark theme by itself, as --eq-red follows the
+     red text. */
+  --section-rule-color: var(--accent);
+  --section-rule-width: 3px;
+  --section-rule-fade: 0.2s;
+
+  /* Rail, counter and header-label motion: the strip's duration and curve, so
+     they all start and finish with the slide; give any of them a literal
+     value to decouple it again. --rail-width is the fixed column every rail
+     item occupies, which keeps the rail's right edge from shifting as dashes
+     swap for dots. */
+  --rail-width: 20px;
+  --rail-duration: var(--slide-duration);
+  --rail-ease: var(--slide-ease);
+  --label-duration: var(--slide-duration);
+
+  /* Reveal motion, and the opacity ladder an upcoming item climbs.
+     --reveal-dim-near is where an item one press away sits; every further press
+     divides it again, down to --reveal-dim-floor, so an item brightens as its
+     turn approaches -- Beamer's \setbeamercovered{dynamic}. Both sit low on
+     purpose: an item still waiting should read as a shape in the margin of your
+     attention, not as text you start reading early. They were 0.20 and 0.04,
+     and halved near the top because waiting items still read as text. The
+     motion and rise variants hide waiting items outright and ignore both.
+
+     The duration is deliberately far short of --slide-duration: an item
+     arriving is a small event inside a slide, not the slide itself moving.
+     For the same reason it eases out -- it starts at once and settles --
+     rather than taking the strip's slow start. */
+  --reveal-duration: 0.45s;
+  --reveal-ease: cubic-bezier(0.33, 1, 0.68, 1);
+  --reveal-dim-near: 0.10;
+  --reveal-dim-floor: 0.03;
+
+  /* The entrance variant, data-reveal-motion (reveal.css). A covered item is
+     hidden, and waits --reveal-shift from its place along the x-axis. When its
+     step arrives it glides in, and items sharing a step start --reveal-stagger
+     apart. Negative starts it to the left, so a row of blocks arrives as one
+     wave in reading order; make it positive to bring them in from the right.
+     A positive shift has to stay under the slide's side padding (3rem at
+     least): a block waiting past the right edge gives the slide a horizontal
+     scrollbar. The
+     ease is an ease-out quint: most of the travel is over at once, and the
+     rest is a long settle, like the strip's. */
+  --reveal-motion-duration: 0.7s;
+  --reveal-motion-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --reveal-shift: -1rem;
+  --reveal-stagger: 0.14s;
+
+  /* The rising variant, data-reveal-rise (reveal.css). A covered line waits
+     its own height below its place, blurred and hidden, and rises through the
+     lower edge of its wrapper, sharpening as it comes. The blur is in em so a
+     heading blurs in proportion to its size: 0.2em is 4px on 20px text. The
+     ease is an ease-out quart, quick to arrive and long to settle. Lines
+     sharing a step start --reveal-stagger apart, as in the motion variant. */
+  --reveal-rise-duration: 0.5s;
+  --reveal-rise-ease: cubic-bezier(0.165, 0.84, 0.44, 1);
+  --reveal-rise-blur: 0.2em;
+
+  /* The focusing variant, data-reveal-focus (reveal.css). Items revealed
+     earlier step back to this opacity, so only the one that has just arrived
+     is at full strength. Kept well above --reveal-dim-near, so an item already
+     seen never reads as one still to come. */
+  --reveal-focus-dim: 0.4;
+
+  /* The highlighter's sweep: a stepped <mark> draws its band from left to
+     right when its step arrives. An ease-in-out, like a pen stroke that
+     starts, runs and stops. */
+  --highlight-duration: 0.6s;
+  --highlight-ease: cubic-bezier(0.65, 0, 0.35, 1);
+
+  --font-sans: "Segoe UI Variable Display", "Segoe UI", -apple-system, BlinkMacSystemFont,
+    system-ui, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "Cascadia Mono", "SF Mono", Consolas, "Roboto Mono", monospace;
+}
+
+/* The dark theme: the same names, color values only. The page is 7% gray
+   rather than black -- near-black smears on OLED phones as the strip moves,
+   and leaves the cards no room to lift -- and the text is soft gray rather
+   than white, which reads without glare. Lowest figures: body 8.4:1, muted
+   5.5:1 (4.6:1 as a comment in a well on the amber card), red 4.5:1,
+   green 5.2:1 and blue 5.5:1 (all three in a well on the amber card; 5.4:1
+   or more on any fill), accent 9.1:1, idle dots 3.3:1. */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  --surface: #121212;
+  --heading: #e6e6e6;
+  --body-text: #cccccc;
+  --chrome-text: #e6e6e6;
+  --chrome-muted: #a6a6a6;
+  --chrome-line: rgba(255, 255, 255, 0.14);
+
+  /* The logo's sun. */
+  --accent: #fecf2a;
+
+  --block-surface: #212121;
+  --block-surface-highlight-a: #1c2e40;
+  --block-surface-highlight-b: #362e17;
+  --block-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.7),
+    0 12px 32px rgba(0, 0, 0, 0.7);
+
+  /* The same three hues a step lighter, so they stand off the dark card: the
+     soft white text measures 5.5:1 at worst. */
+  --block-bar: #2a60b0;
+  --block-bar-alert: #a82834;
+  --block-bar-example: #2a6838;
+  --block-bar-text: #f2f2f2;
+
+  --table-line: rgba(255, 255, 255, 0.2);
+
+  /* The text blue, red and green below are the same hues, light enough to
+     read on the dark page. */
+  --code-surface: rgba(255, 255, 255, 0.06);
+  --code-line: rgba(255, 255, 255, 0.1);
+  --code-mark: #8ab9ff;
+
+  --dot-idle: color-mix(in srgb, white 36%, var(--surface));
+  --dot-hover: color-mix(in srgb, white 60%, var(--surface));
+
+  --reveal-alert: #ff7c88;
+
+  /* The accent's sun yellow, opaque: the translucent yellow over a dark
+     card left body text at 3.9:1. A dark gold instead: body text 5.3:1 on it,
+     and 1.6:1 to 2.2:1 against the page and the cards, so the band still
+     shows. */
+  --highlight: #5c4a10;
+
+  /* --eq-red and --eq-blue follow the two tokens above on their own, the
+     comparison marks follow the red and the green, and the alert follows
+     the accent. */
+  --eq-green: #6ac47f;
+
+  /* Figures are exported dark-on-transparent, so they are flipped: invert
+     turns their lightness over and hue-rotate swings each color back to its
+     own hue, so text becomes light gray and every curve a lighter version of
+     itself. 0.9 rather than 1 keeps the text off pure white and lands a
+     figure's white boxes near --surface instead of as black holes. A figure
+     whose exact colors matter opts out and sits on the paper instead. */
+  --fig-filter: invert(0.9) hue-rotate(180deg);
+  --fig-paper: #e6e6e6;
+}

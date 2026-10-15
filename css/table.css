@@ -1,0 +1,148 @@
+/* The generic two-column reference table: a term and what it means, in groups.
+   Built for a nomenclature or glossary, where rows are grouped and each group
+   is introduced by a heading rather than by column headers. .table-data
+   turns it into a table of results, and .table-highlight marks a row. */
+
+/* Groups are <tbody> elements, and that is what draws the rules -- adding a
+   group means adding a <tbody>, never adding a border.
+
+   Deliberately smaller than body text: a reference table is scanned for one
+   entry, not read through. This is the deck's \scriptsize, and it is what lets
+   a quick-reference slide hold twenty-odd rows in a single column. */
+.table {
+  border-collapse: collapse;
+  margin: 0;
+  font-size: clamp(0.75rem, 1.15vw, 1rem);
+  line-height: 1.3;
+  text-align: left;
+  /* Two of these usually sit in a .columns bed. Without this they would stretch
+     to the tallest track and the shorter one would space its rows out to match,
+     which reads as a different table rather than the same one with less in it. */
+  align-self: start;
+}
+
+.table th,
+.table td {
+  padding-block: 0.16em;
+  vertical-align: baseline;
+}
+
+/* A rule above every group, and one below the last -- the same fence \hline
+   builds, expressed once instead of per row. */
+.table tbody {
+  border-top: 1px solid var(--table-line);
+}
+
+.table tbody:last-child {
+  border-bottom: 1px solid var(--table-line);
+}
+
+/* The group's name, spanning both columns, with its own rule beneath: the
+   second \hline of each \hline / header / \hline sandwich. The space above it
+   is what keeps the name off the rule that opens its group. */
+.table-group th {
+  padding-block-start: 0.7em;
+  border-bottom: 1px solid var(--table-line);
+  font-weight: 650;
+  color: var(--heading);
+}
+
+/* The term column is right-aligned so terms and definitions meet at the gutter.
+   The deck centers the table as a block; a ragged left column would leave each
+   pair drifting apart -- the same reason .block and .bullets keep their own
+   text aligned rather than inheriting the slide's centering.
+
+   Regular weight, not bold: only the group headings are bold, so they are what
+   the eye lands on first. The darker --heading ink is enough to keep a term
+   apart from its definition. */
+.table th[scope="row"] {
+  padding-inline-end: 1.5em;
+  text-align: right;
+  font-weight: 400;
+  white-space: nowrap;
+  color: var(--heading);
+}
+
+/* Column headings, for a table that holds more than a term and its meaning: a
+   .table-group row of th scope="col" cells, bold like any group name. Each is
+   aligned like the column it heads, so the first sits right-aligned against
+   the gutter above the terms. */
+.table th[scope="col"]:first-child {
+  padding-inline-end: 1.5em;
+  text-align: right;
+}
+
+/* A third column and beyond need a gutter of their own. In the two-column form
+   the term's padding is the only one, and without this the extra columns
+   would run into each other. */
+.table tr > :nth-child(n + 3) {
+  padding-inline-start: 1.5em;
+}
+
+/* Hands every spare pixel to the definition column. In a .columns bed the table
+   is stretched to its track, and without this the extra width would open a gap
+   *between* the two columns instead of trailing after the definitions. */
+.table td {
+  width: 100%;
+  color: var(--body-text);
+}
+
+/* A table standing directly on the slide has no track to fill, and the 100%
+   above would stretch it across the whole stage with its definitions stranded
+   at the left. Sized to its content instead, it is centered like any other item
+   on the slide -- which needs align-self put back, since the start that keeps
+   a table off the tallest grid track would pin it to the slide's left edge. */
+.slide > .table {
+  align-self: center;
+}
+
+.slide > .table td {
+  width: auto;
+}
+
+/* A table of results: many columns of numbers, as LaTeX's {cccc}. The class
+   goes on a wrapper around the .table, because on a narrow screen the wrapper
+   is what scrolls sideways, rather than the whole slide or a table squeezed
+   until its numbers wrap. flex-shrink: 0 for the reason .code has it: a box
+   that scrolls has no automatic minimum height, and a full slide would
+   squeeze it rather than itself. Every cell is centered and kept on one line,
+   with figures of equal width so the columns line up.
+
+   overflow-y is load-bearing. With overflow-x scrolling, a visible
+   overflow-y computes to auto, and the collapsed table's outer rules spill
+   half a pixel past its box: every screen, however large, showed a vertical
+   scrollbar for one or two pixels. hidden keeps it to the sideways scroll a
+   narrow screen needs, and the padding keeps those half rules from being
+   cut. */
+.table-data {
+  flex-shrink: 0;
+  max-width: 100%;
+  padding-block: 2px;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.table-data .table {
+  font-variant-numeric: tabular-nums;
+}
+
+.table-data .table th,
+.table-data .table td {
+  width: auto;
+  padding: 0.3em 0.7em;
+  text-align: center;
+  white-space: nowrap;
+}
+
+/* The first heading too, which the two-column form aligns right against
+   the terms' gutter. */
+.table-data .table th[scope="col"]:first-child {
+  padding-inline-end: 0.7em;
+  text-align: center;
+}
+
+/* A marked row, LaTeX's \rowcolor: the highlighter's color across the whole
+   row (tokens.css). */
+.table-highlight > * {
+  background: var(--table-highlight);
+}

@@ -1,0 +1,182 @@
+/* Beamer-style overlays: the opacity ladder an upcoming item climbs. */
+
+/* Beamer's overlays: an item waits for its own key press instead of arriving
+   with the slide. --away is written by js/reveal.js and is how many presses the
+   item is still waiting on, so the nearer its turn the more of it is already
+   there; the 1 is only the fallback for an element the script has not stamped.
+
+   Revealing is opacity and nothing else -- never display, never visibility. A
+   ghosted item keeps its box, so nothing reflows as items arrive. That matters
+   more here than it does in Beamer: .slide centers its content vertically, so a
+   reflow would shift every line on every press. It is also the only reason the
+   ladder can exist at all. A .bullets marker is a pseudo-element of its li and
+   so fades with its item for free. */
+[data-reveal-step] {
+  opacity: max(var(--reveal-dim-floor), calc(var(--reveal-dim-near) / var(--away, 1)));
+  transition:
+    opacity var(--reveal-duration) var(--reveal-ease),
+    color var(--reveal-duration) var(--reveal-ease);
+}
+
+/* One class more specific than the ladder above, which is what lets it win
+   without !important -- and why --away is floored at 1 rather than reaching 0
+   and dividing by zero up there. */
+[data-reveal-step].is-revealed {
+  opacity: 1;
+}
+
+/* The alerting alternative: Beamer's \item<+-| alert@+>. The step that has just
+   arrived is marked, and goes back to normal when the next one arrives.
+   js/reveal.js sets .is-current on the step where away === 0 for every reveal
+   in the deck, unconditionally -- these rules are what give it meaning, and
+   they match only inside a [data-reveal-alert] subtree, so a list without the
+   attribute behaves exactly as it did before.
+
+   Being a descendant selector is the point: the attribute works at any level.
+   On one <ul>, on a .slide for everything on that slide, or on .slides to make
+   alerting the deck-wide default -- all three, with no extra code. The color
+   is the highlight's, at text strength (--reveal-alert-highlight, tokens.css):
+   the text itself changes color, with no band behind it. */
+[data-reveal-alert] [data-reveal-step].is-current,
+[data-reveal-alert] [data-reveal-step].is-current :is(h1, h2, h3, h4) {
+  color: var(--reveal-alert-highlight);
+}
+
+/* The headings need saying separately because .block h3 sets its own color and
+   so does not inherit; the marker needs saying separately because it is a
+   pseudo-element of its li. A colored line still carrying a dot of another
+   color reads as a half-applied style. A dot is painted, so it takes the
+   color as its background; a number, in an <ol>, as its text. A marker is a
+   graphic and needs only 3:1, which this clears several times over. */
+[data-reveal-alert] :not(ol) > [data-reveal-step].is-current::before {
+  background: var(--reveal-alert-highlight);
+}
+
+[data-reveal-alert] ol > [data-reveal-step].is-current::before {
+  color: var(--reveal-alert-highlight);
+}
+
+/* Neither a heading nor a marker inherits the color transition the item
+   itself carries, so they would snap while the text faded. */
+[data-reveal-alert] [data-reveal-step] :is(h1, h2, h3, h4),
+[data-reveal-alert] [data-reveal-step]::before {
+  transition:
+    color var(--reveal-duration) var(--reveal-ease),
+    background-color var(--reveal-duration) var(--reveal-ease);
+}
+
+/* The focusing variant: as each step arrives, the items revealed before it
+   step back to --reveal-focus-dim, so only the step that has just arrived is
+   at full strength -- a spotlight walking down a list. Like the alert it
+   costs no JavaScript: it reads the same .is-current, and it is a descendant
+   selector, so it works on one list, a .slide or the whole deck. Stepping
+   back hands the focus to the step before; arriving backward focuses the
+   last. Two attributes, two classes and a :not(), so it outranks the plain
+   .is-revealed. The ladder above still covers the items to come. */
+[data-reveal-focus] [data-reveal-step].is-revealed:not(.is-current) {
+  opacity: var(--reveal-focus-dim);
+}
+
+/* The entrance variant, for content that should not be seen before its turn.
+   A covered item is hidden outright rather than ghosted, and waits
+   --reveal-shift to one side of its place. When its step arrives it fades in
+   and glides home. Items sharing a step start one after another,
+   --reveal-stagger apart, in document order: --reveal-order is each one's place
+   in that queue, stamped by js/reveal.js. The delay sits on the revealed state
+   only, so the queue runs on the way in, and stepping back they leave together.
+
+   A descendant selector, like data-reveal-alert, so it works on a bed, a
+   .slide or .slides. transform moves the painted box and never the layout
+   one, so nothing reflows as an item arrives, which keeps the rule at the top
+   of this file. The price is the ghost: nothing on the slide says more is
+   coming, so use it where the surprise is the point. */
+[data-reveal-motion] [data-reveal-step] {
+  opacity: 0;
+  transform: translateX(var(--reveal-shift));
+  transition:
+    opacity var(--reveal-motion-duration) var(--reveal-motion-ease),
+    transform var(--reveal-motion-duration) var(--reveal-motion-ease),
+    color var(--reveal-duration) var(--reveal-ease);
+}
+
+/* Two attributes and a class, so it outranks both the rule above and the
+   plain .is-revealed, which has one attribute and a class. */
+[data-reveal-motion] [data-reveal-step].is-revealed {
+  opacity: 1;
+  transform: none;
+  transition-delay: calc(var(--reveal-order, 0) * var(--reveal-stagger));
+}
+
+/* The rising variant, for a line that should surface rather than fade up. The
+   element carrying data-reveal-rise is a mask, and each of its stepped children
+   waits its own height below its place, blurred and hidden, then rises through
+   the mask's lower edge, sharpening as it comes. Lines sharing a step start
+   --reveal-stagger apart; stepping back, they sink together.
+
+   A child combinator, unlike the two flags above: the edge a line crosses is
+   what makes it surface, so the mask has to be its own parent. The wrapper is
+   also what contains the covered line. Moved below its place with nothing
+   clipping it, a line lengthens the slide, so a full slide would scroll until
+   it rose, and the wheel would scroll the slide rather than advance.
+
+   clip rather than hidden, which would make the mask a scroll container. A
+   flex item that scrolls has no automatic minimum height, so a full slide
+   would squeeze the wrapper and cut the line off -- the bug .code's
+   flex-shrink guards against. The margin keeps a tightly set heading's
+   descenders clear at rest.
+
+   Made for text. On a card the mask would cut the shadow, and on a .slide or
+   .slides the clip would stop an overflowing slide from scrolling. On a list
+   the list is the mask, so only its last item crosses an edge. Like the motion
+   variant it gives up the ghost. filter and transform change painting only,
+   so nothing reflows. */
+[data-reveal-rise] {
+  overflow: clip;
+  overflow-clip-margin: 0.25em;
+}
+
+[data-reveal-rise] > [data-reveal-step] {
+  opacity: 0;
+  filter: blur(var(--reveal-rise-blur));
+  transform: translateY(100%);
+  transition:
+    opacity var(--reveal-rise-duration) var(--reveal-rise-ease),
+    filter var(--reveal-rise-duration) var(--reveal-rise-ease),
+    transform var(--reveal-rise-duration) var(--reveal-rise-ease),
+    color var(--reveal-duration) var(--reveal-ease);
+}
+
+/* Ending on none rather than blur(0) and translateY(0) leaves nothing applied
+   at rest: the line is exactly what it would be without the effect. Two
+   attributes and a class, so it outranks the rule above and .is-revealed. */
+[data-reveal-rise] > [data-reveal-step].is-revealed {
+  opacity: 1;
+  filter: none;
+  transform: none;
+  transition-delay: calc(var(--reveal-order, 0) * var(--reveal-stagger));
+}
+
+/* The highlighter's variant. A <mark> carrying data-reveal keeps its text in
+   plain sight -- the phrase belongs to a sentence already being read -- and
+   waits with its band at zero width. When its step arrives the band sweeps in
+   from the left, and stepping back wipes it out again. With the default
+   box-decoration-break, a phrase that wraps is swept line after line, as one
+   stroke.
+
+   Only the band's width is set here, through --mark-sweep, so its height and
+   position stay in the one rule that draws it (content.css). The transition
+   is on background-size, whose computed value changes with the property, so
+   the custom property needs no registering. The element selector puts the
+   opacity above the ladder at the top of this file.
+
+   Not inside data-reveal-motion or data-reveal-rise: their rules hide the
+   stepped element outright, and would hide the phrase with it. */
+mark[data-reveal-step] {
+  --mark-sweep: 0%;
+  opacity: 1;
+  transition: background-size var(--highlight-duration) var(--highlight-ease);
+}
+
+mark[data-reveal-step].is-revealed {
+  --mark-sweep: 100%;
+}

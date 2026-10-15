@@ -1,0 +1,31 @@
+/* Every stylesheet, in cascade order. index.html links this one file, so the
+   order lives here rather than spread across nine <link> tags.
+
+   The order is mostly for readability -- almost every rule in the deck wins by
+   specificity and would work anywhere. One pair does not: .slide p (stage) and
+   .block p (content) have identical specificity, so source order is the only
+   thing making the override work. stage.css must stay above content.css. */
+
+@import "tokens.css";
+@import "base.css";
+@import "chrome.css";
+@import "label.css";
+@import "stage.css";
+@import "content.css";
+@import "code.css";
+@import "table.css";
+@import "reveal.css";
+@import "rail.css";
+@import "toc.css";
+
+/* optional: the theme switch's sweep, with js/theme-transition.js */
+@import "theme-transition.css";
+
+/* for citation-setup */
+@import "../citation-setup/citations.css";
+
+/* for mathjax */
+@import "../mathjax/mathjax.css";
+
+/* for figure-setup */
+@import "../figure-setup/figure-style.css";

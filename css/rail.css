@@ -1,0 +1,171 @@
+/* The dot rail: one dot per slide of the current section, one dash per
+   other section, and the collapse that animates between them. */
+
+.dots {
+  position: absolute;
+  z-index: 2;
+  top: 50%;
+  right: clamp(1rem, 3vw, 2.25rem);
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  transition: opacity var(--rail-duration) var(--rail-ease);
+}
+
+/* The rail has nothing to say on a slide outside every named section -- the
+   opening title and contents pair -- so it leaves rather than hanging there
+   empty. Faded rather than display:none so it goes and comes back with the
+   slide; the matching `inert` is set from js/rail.js, because an element at
+   opacity 0 is still focusable and still in the accessibility tree.
+
+   The class is in the markup, so the rail starts hidden on the opening
+   slide. Set only from js/rail.js, it arrived after the page had already
+   drawn the empty rail at full opacity, and the rail visibly faded out on
+   every load. */
+.dots.is-hidden {
+  opacity: 0;
+}
+
+/* The line the marks sit on, from the first to the last. 4px in from each
+   end is both the middle of a dash (its 8px box) and the top edge of a dot
+   (6px in its 14px box), so whichever mark ends the rail, the line starts
+   under it and never shows past it. Behind the marks by z-index -- .dots is
+   its own stacking context -- and they are opaque (tokens.css), so it passes
+   behind them rather than showing through. Out of flow, so the gap is
+   untouched, and the rail's height is all it follows as sections open and
+   close. */
+.dots::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  top: 4px;
+  bottom: 4px;
+  left: calc(50% - 0.5px);
+  width: 1px;
+  background: var(--rail-line);
+}
+
+/* One group per section, holding both of that section's representations: the
+   collapsed dash and the expanded run of dots. Changing section collapses one
+   and opens the other. Nothing in the rail is created or destroyed after the
+   first build -- that is the only reason any of this can transition, since a
+   freshly created node has no previous state to animate from.
+
+   Every group is the same fixed width so the rail's right edge never moves as
+   dashes swap for dots. */
+.rail-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: var(--rail-width);
+}
+
+/* The dash standing in for a section that is not current. Deliberately wider
+   and thicker than a dot: it represents a whole section, so it should carry
+   more visual weight than a single slide. */
+.section-tick {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--rail-width);
+  height: 8px;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  overflow: hidden;
+  transition:
+    height var(--rail-duration) var(--rail-ease),
+    opacity var(--rail-duration) var(--rail-ease);
+}
+
+.rail-group.is-current .section-tick {
+  height: 0;
+  opacity: 0;
+}
+
+.section-tick::before {
+  content: '';
+  width: 12px;
+  height: 2px;
+  border-radius: 1px;
+  background: var(--dot-idle);
+  transition: background-color 0.2s ease;
+}
+
+.section-tick:hover::before {
+  background: var(--dot-hover);
+}
+
+.section-tick:focus-visible {
+  outline: 2px solid var(--chrome-text);
+  outline-offset: 3px;
+}
+
+/* Animating to an automatic height: a grid row interpolated from 0fr to 1fr.
+   This is why .rail-dots-inner carries overflow: hidden -- without it the row
+   keeps its min-content size and never reaches zero. It is also why there is no
+   padding anywhere in here: padding is not clipped by overflow, so any would
+   hold the collapsed row open. */
+.rail-dots {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition:
+    grid-template-rows var(--rail-duration) var(--rail-ease),
+    opacity var(--rail-duration) var(--rail-ease);
+}
+
+.rail-group.is-current .rail-dots {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+
+.rail-dots-inner {
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+/* The 14px box exists to contain the active dot's 3px halo, which would
+   otherwise be clipped by .rail-dots-inner's overflow: 6px of dot plus two 3px
+   rings is 12, and the 2px left over is all the margin the halo has. The box
+   plus the 4px gap above gives the rail its 18px pitch. */
+.dot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--rail-width);
+  height: 14px;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+
+.dot::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--dot-idle);
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.dot:hover::before {
+  background: var(--dot-hover);
+}
+
+.dot.active::before {
+  background: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-halo);
+}
+
+.dot:focus-visible {
+  outline: 2px solid var(--chrome-text);
+  outline-offset: 3px;
+}

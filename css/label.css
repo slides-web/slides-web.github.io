@@ -1,0 +1,38 @@
+/* The section name in the header -- two stacked layers that swap roles. */
+
+/* Two stacked layers that alternate, so the outgoing and incoming names are on
+   screen at the same time. A single element cannot hold two strings at once,
+   which is why replacing textContent left the label blank at the start of every
+   change. Grid stacking keeps the label's natural height -- absolutely
+   positioned layers would collapse it and force a hardcoded height. overflow
+   clips the outgoing name at the edge, the way .page clips the strip. */
+.section-label {
+  display: grid;
+  overflow: hidden;
+  text-align: right;                /* the label sits in the right corner */
+}
+
+/* The slide's easing and duration: this is text traveling vertically and
+   being clipped at a boundary, exactly what the strip does, so matching both
+   makes the name and the slide move as one. The rail runs on the same curve
+   (tokens.css). */
+.section-label > span {
+  grid-area: 1 / 1;
+  transition:
+    transform var(--label-duration) var(--slide-ease),
+    opacity var(--label-duration) var(--slide-ease);
+}
+
+/* --exit is set from js/label.js: 1 moving forward through the deck, -1 moving
+   back. It makes the name travel the same way the strip does -- going forward,
+   the old name leaves upward and the new one arrives from below. */
+.section-label > .is-leaving {
+  transform: translateY(calc(var(--exit) * -100%));
+  opacity: 0;
+}
+
+.section-label > .is-entering {
+  transform: translateY(calc(var(--exit) * 100%));
+  opacity: 0;
+  transition: none;                 /* a start state is set, never animated to */
+}

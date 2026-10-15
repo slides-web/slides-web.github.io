@@ -1,0 +1,85 @@
+/* Source code on a slide: the listing (pre.code) and the inline form (code in
+   a sentence), for a talk that shows code. The gallery shows two listings, the
+   HTML and the JS of one system of equations, on "Code, marks and footnotes".
+
+   MathJax skips pre and code by default, which is what lets a listing show
+   \ref{eq:park} or \( ... \) literally instead of typesetting it. The same rule
+   runs the other way: in running text, any backslash delimiter that should
+   stay literal has to sit inside a <code>. */
+
+/* A well rather than a card: lighter than whatever it sits on instead of raised
+   off it, and translucent so a listing inside a .block takes that card's hue.
+   A second raised card inside a card would read as a stack of paper. */
+/* flex-shrink is load-bearing. A listing is a flex item of .slide, and
+   overflow-x: auto zeroes a flex item's automatic minimum height -- so on a
+   slide that runs out of room the listing, rather than the slide, gives way,
+   and its last lines are clipped with nothing to say they are there. Held at
+   its natural height, it overflows the slide instead, which scrolls.
+
+   A line too long for the slide wraps rather than scrolling sideways, so the
+   audience sees all of it: the file's own line breaks are kept (pre-wrap),
+   and a long token breaks only when nothing else fits. */
+.code {
+  flex-shrink: 0;
+  margin: 0;
+  max-width: 100%;
+  padding: 0.85em 1.15em;
+  overflow-x: auto;
+  border: 1px solid var(--code-line);
+  border-radius: calc(var(--block-radius) * 0.7);
+  background: var(--code-surface);
+  font-family: var(--font-mono);
+  font-size: clamp(0.8rem, 1.15vw, 1rem);
+  line-height: 1.55;
+  text-align: left;
+  color: var(--heading);
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+  tab-size: 2;
+}
+
+/* Where the listing lives, when that is worth saying. An attribute rather than
+   a child element, so the listing's own text stays exactly what the file
+   holds. */
+.code[data-file]::before {
+  content: attr(data-file);
+  display: block;
+  margin-bottom: 0.55em;
+  font-family: var(--font-sans);
+  font-size: 0.8em;
+  color: var(--chrome-muted);
+}
+
+/* The part of the listing the slide is about. */
+.code b {
+  font-weight: 600;
+  color: var(--code-mark);
+}
+
+/* A comment, or a note on where a fragment comes from: present but quiet. */
+.code i {
+  font-style: normal;
+  color: var(--chrome-muted);
+}
+
+/* Inline code. The browser's own rule gives code the bare `monospace` family,
+   which it then shrinks to 13px -- visibly smaller than the sentence around
+   it. Naming a real family avoids that; 0.9em evens out the mono's larger
+   x-height against the sans.
+
+   The color is inherited on purpose. Inside a data-reveal-alert item the
+   alert colors the line, and a colored line with its code left dark reads
+   as a half-applied style -- the same reason reveal.css names the marker.
+
+   nowrap because a token is one thing: left to wrap, data-eq="park" breaks at
+   its hyphen and \[ ... \] splits between its two halves. */
+.slide code {
+  white-space: nowrap;
+  padding: 0.05em 0.3em;
+  border-radius: 0.3em;
+  background: var(--code-surface);
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}

@@ -1,0 +1,130 @@
+/* Citations: the inline [1] marker, the reference slides, the hover panel.
+
+   Every selector is prefixed bib- and every rule reads the deck's tokens
+   through a fallback, so this file can be dropped into another project without
+   colliding with its classes or depending on its palette.
+
+   Import it after content.css, so it can win at equal specificity against the
+   slide's own rules. */
+
+:root {
+  /* These live here rather than in tokens.css so the folder stays portable.
+     Tune the reference slides from this block. */
+  --bib-size: clamp(0.78rem, 1.2vw, 0.95rem);
+  --bib-line: 1.45;
+  --bib-row-gap: 0.7rem;
+  --bib-col-gap: 2.25rem;
+  --bib-num-gap: 0.45rem;
+  --bib-num-width: 2.4rem;
+
+  /* The narrowest a column may be before the list drops to one. */
+  --bib-col-min: 21rem;
+
+  --bib-popover-width: min(36rem, 78vw);
+  --bib-popover-size: 0.9rem;
+}
+
+/* --- The inline marker ---------------------------------------------------
+   Plain text on purpose: the color is inherited, there is no cursor change
+   and no focus ring. It should read as part of the sentence, not as a
+   control. nowrap keeps [1], [2] from breaking across a line. */
+
+.bib-cite {
+  white-space: nowrap;
+}
+
+/* A key with no entry. Deliberately loud -- it is a build error on screen. */
+.bib-missing {
+  color: var(--reveal-alert, #9a1f2b);
+  font-weight: 600;
+}
+
+/* --- The reference slides ------------------------------------------------
+   Two columns at full width, one when the stage narrows. Each track is asked
+   to be at least half the container less half the gap, so a third can never
+   fit however wide the window is; once --bib-col-min no longer fits, the
+   minimum wins and the list stacks. No media query. The minimum is itself
+   capped at the list's width, so on a phone, narrower than --bib-col-min, the
+   one column fits the stage instead of running off it.
+
+   "Full width" is the host deck's content bed, --bed-max, so the references
+   span the same width as the slides before them; without the token the list
+   takes the whole stage, as it always did. margin-inline: auto centers it once
+   the cap applies, in a flex slide or a plain block alike. */
+
+.bib-list {
+  width: 100%;
+  max-width: var(--bed-max, none);
+  margin: 0 auto;
+  padding: 0;
+  list-style: none;
+
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(min(100%, max(var(--bib-col-min), 50% - var(--bib-col-gap) / 2)), 1fr)
+  );
+  column-gap: var(--bib-col-gap);
+  row-gap: var(--bib-row-gap);
+
+  /* The slide centers its text; a bibliography reads as a list only when it
+     is ranged left, the same reason .block and .table set their own. */
+  text-align: left;
+
+  font-size: var(--bib-size);
+  line-height: var(--bib-line);
+  color: var(--body-text, #4a5046);
+}
+
+.bib-item {
+  display: grid;
+  grid-template-columns: var(--bib-num-width) 1fr;
+  column-gap: var(--bib-num-gap);
+  align-items: baseline;
+}
+
+/* Tabular figures keep [9] and [10] the same width, so the entries line up. */
+.bib-num {
+  font-variant-numeric: tabular-nums;
+}
+
+.bib-text {
+  /* .slide p caps its measure at 46ch; a reference is not running prose and
+     the column is already the measure. */
+  max-width: none;
+}
+
+/* --- The hover panel -----------------------------------------------------
+   Lives on <body>, in the top layer, so .page's overflow: hidden cannot clip
+   it. The UA stylesheet gives [popover] inset: 0, margin: auto and a border;
+   all three have to go before the JS can place it. */
+
+.bib-popover[popover] {
+  position: fixed;
+  inset: auto;
+  margin: 0;
+  border: 0;
+
+  width: var(--bib-popover-width);
+  max-width: var(--bib-popover-width);
+  padding: 0.8rem 1rem;
+
+  background: var(--block-surface, #fff);
+  color: var(--body-text, #4a5046);
+  border-radius: var(--block-radius, 12px);
+  box-shadow: var(--block-shadow, 0 8px 20px rgba(31, 31, 29, 0.18));
+
+  font-family: var(--font-sans, system-ui, sans-serif);
+  font-size: var(--bib-popover-size);
+  line-height: 1.45;
+  text-align: left;
+}
+
+.bib-popover-item {
+  margin: 0;
+  max-width: none;
+}
+
+.bib-popover-item + .bib-popover-item {
+  margin-top: 0.55rem;
+}

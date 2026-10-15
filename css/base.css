@@ -1,0 +1,60 @@
+/* Reset, document, line breaking, and the page frame the
+   header/content/footer sit in. */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+/* No pull-to-refresh: on a phone a downward swipe at the top of the page
+   would reload the deck on its title slide instead of going back a slide
+   (js/swipe.js). Vertical only, so the browser's back swipe stays. */
+html, body {
+  height: 100%;
+  margin: 0;
+  overscroll-behavior-y: none;
+}
+
+body {
+  font-family: var(--font-sans);
+  color: var(--body-text);
+  background: var(--surface);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Line breaking. Titles, captions and the other short centered lines are
+   balanced, so one that wraps breaks into even lines rather than a full line
+   and a stray word. Running text only avoids leaving one word alone on its
+   last line, which is far cheaper than balancing a paragraph. The longhand
+   rather than text-wrap, which would also reset text-wrap-mode and turn
+   wrapping back on inside a nowrap. A browser without it keeps its usual
+   breaks; Chrome balances up to six lines. */
+h1, h2, h3, figcaption, .subtitle, .tag, .lines li {
+  text-wrap-style: balance;
+}
+
+p, li {
+  text-wrap-style: pretty;
+}
+
+/* Three rows, but the content spans all three: the header and footer are
+   transparent bands laid over the top and bottom of the slide rather than
+   walls around it, so a slide is the whole viewport tall and a tall one can
+   spread under the chrome. The bands stay on top by z-index (chrome.css), and
+   .page is what clips the strip at the viewport edge.
+
+   All three children name their column as well as their row (chrome.css,
+   stage.css). An item given only a row is auto-placed into the first column
+   where it does not overlap anything, so .content, which overlaps both bands,
+   would land in a second implicit column beside them.
+
+   dvh, not vh: on a phone 100vh is the height with the browser's toolbar
+   hidden, so the footer fell below the screen and a swipe scrolled the
+   toolbar away instead of changing slide. */
+.page {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: var(--chrome-height) minmax(0, 1fr) var(--chrome-height);
+  height: 100dvh;
+  overflow: hidden;
+}

@@ -51,6 +51,16 @@
   --block-shadow:
     0 1px 3px rgba(0, 0, 0, 0.10),
     0 10px 24px rgba(0, 0, 0, 0.15);
+  /* A card under the pointer (content.css) takes its own fill this far
+     toward the ink, fading over --block-hover-duration: 4% darker here, 3%
+     lighter in the dark theme, the same 3-unit step in lightness (L*) either
+     way. On a hovered card body text
+     measures 7.7:1 or better and every other text color 4.8:1. The one
+     exception is red or muted text in a code well on a dark highlight card,
+     which drops to 4.1:1; the deck never puts text there. */
+  --block-hover-ink: black;
+  --block-hover-mix: 4%;
+  --block-hover-duration: 0.3s;
   /* The card's inner padding. A titled block's bar reads it too, to reach
      the card's edges. */
   --block-pad: clamp(1.25rem, 2.5vw, 1.75rem);
@@ -295,6 +305,8 @@
   --block-shadow:
     0 1px 3px rgba(0, 0, 0, 0.7),
     0 12px 32px rgba(0, 0, 0, 0.7);
+  --block-hover-ink: white;
+  --block-hover-mix: 3%;
 
   /* The same three hues a step lighter, so they stand off the dark card: the
      soft white text measures 5.5:1 at worst. */

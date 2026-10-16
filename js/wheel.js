@@ -4,8 +4,8 @@
 // delta, but a trackpad swipe sends dozens of small ones and then keeps sending
 // momentum for a second after your fingers have left. Left alone that would fly
 // through the whole deck -- and it would do it by retargeting the strip
-// mid-flight over and over, which is exactly the stutter the deck already has
-// on fast key presses. See CLAUDE.md.
+// mid-flight over and over, the stutter advance() (js/navigate.js) guards key
+// presses against.
 //
 // So a move holds the wheel until it has landed -- but **how long depends on
 // what actually happened.** Changing slide takes --slide-duration and wants the

@@ -92,7 +92,7 @@
    for text. It is the card's first flex item, so it sits above the h3. */
 .process > li::before {
   content: counter(process, decimal-leading-zero);
-  font-size: clamp(0.95rem, 1.4vw, 1.15rem);
+  font-size: clamp(0.85rem, 1.4vw, 1.15rem);
   font-weight: 650;
   letter-spacing: 0.04em;
   color: var(--accent);
@@ -177,29 +177,40 @@
 }
 
 .block {
+  --fill: var(--block-surface);
   display: flex;
   flex-direction: column;
   gap: 0.6rem;
   padding: var(--block-pad);
   border-radius: var(--block-radius);
-  background: var(--block-surface);
+  background: var(--fill);
   box-shadow: var(--block-shadow);
+  transition: background-color var(--block-hover-duration) ease;
 }
 
 /* Identical to .block in every way but the fill. Swap the class, nothing else.
    The -a / -b are categorical, not ordered: they exist to separate two things
    on one slide, so neither outranks the other. */
 .block-highlight-a {
-  background: var(--block-surface-highlight-a);
+  --fill: var(--block-surface-highlight-a);
 }
 
 .block-highlight-b {
-  background: var(--block-surface-highlight-b);
+  --fill: var(--block-surface-highlight-b);
+}
+
+/* Under the pointer a block's own fill, whichever it is, steps toward
+   --block-hover-ink: darker in the light theme, lighter in the dark
+   (tokens.css). Mouse only: on a phone a tap would leave it stuck. */
+@media (hover: hover) {
+  .block:hover {
+    background: color-mix(in srgb, var(--fill), var(--block-hover-ink) var(--block-hover-mix));
+  }
 }
 
 .block h3 {
   margin: 0;
-  font-size: clamp(1.15rem, 2vw, 1.5rem);
+  font-size: clamp(1.05rem, 2vw, 1.5rem);
   font-weight: 650;
   line-height: 1.2;
   letter-spacing: -0.01em;
@@ -250,7 +261,7 @@
   gap: clamp(1.5rem, 4vw, 3rem);
   width: 100%;
   max-width: var(--bed-max);
-  font-size: clamp(1.05rem, 1.6vw, 1.35rem);
+  font-size: clamp(0.95rem, 1.6vw, 1.35rem);
   line-height: 1.4;
   text-align: center;
 }
@@ -258,7 +269,7 @@
 .results b {
   display: block;
   margin-bottom: 0.15em;
-  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  font-size: clamp(2.25rem, 6vw, 4.5rem);
   font-weight: 650;
   line-height: 1.05;
   letter-spacing: -0.03em;
@@ -288,7 +299,7 @@
   flex-direction: column;
   gap: clamp(0.6rem, 1.2vw, 0.9rem);
   max-width: min(52rem, 100%);
-  font-size: clamp(1.05rem, 1.6vw, 1.35rem);
+  font-size: clamp(0.95rem, 1.6vw, 1.35rem);
   line-height: 1.5;
 }
 

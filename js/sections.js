@@ -3,7 +3,7 @@
 // Sections are metadata, not structure: consecutive slides carrying the same
 // data-section value form one section. Grouping them with wrapper elements
 // would make the wrappers the strip's flex children and break its translateY
-// math -- see CLAUDE.md.
+// math (js/navigate.js).
 //
 // Each entry is { name, first, last } with 1-based, inclusive slide numbers.
 // With no data-section anywhere, every slide lands in one unnamed section, and

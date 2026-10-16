@@ -10,12 +10,16 @@
    more here than it does in Beamer: .slide centers its content vertically, so a
    reflow would shift every line on every press. It is also the only reason the
    ladder can exist at all. A .bullets marker is a pseudo-element of its li and
-   so fades with its item for free. */
+   so fades with its item for free.
+
+   These transition lists replace a stepped block's own, so they carry its
+   hover fill too (content.css). */
 [data-reveal-step] {
   opacity: max(var(--reveal-dim-floor), calc(var(--reveal-dim-near) / var(--away, 1)));
   transition:
     opacity var(--reveal-duration) var(--reveal-ease),
-    color var(--reveal-duration) var(--reveal-ease);
+    color var(--reveal-duration) var(--reveal-ease),
+    background-color var(--block-hover-duration) ease;
 }
 
 /* One class more specific than the ladder above, which is what lets it win
@@ -96,15 +100,19 @@
   transition:
     opacity var(--reveal-motion-duration) var(--reveal-motion-ease),
     transform var(--reveal-motion-duration) var(--reveal-motion-ease),
-    color var(--reveal-duration) var(--reveal-ease);
+    color var(--reveal-duration) var(--reveal-ease),
+    background-color var(--block-hover-duration) ease;
 }
 
 /* Two attributes and a class, so it outranks both the rule above and the
-   plain .is-revealed, which has one attribute and a class. */
+   plain .is-revealed, which has one attribute and a class. The delay goes
+   property by property, in the order of the list above: the stagger holds
+   back the arrival, never a block's hover fill. */
 [data-reveal-motion] [data-reveal-step].is-revealed {
+  --delay: calc(var(--reveal-order, 0) * var(--reveal-stagger));
   opacity: 1;
   transform: none;
-  transition-delay: calc(var(--reveal-order, 0) * var(--reveal-stagger));
+  transition-delay: var(--delay), var(--delay), var(--delay), 0s;
 }
 
 /* The rising variant, for a line that should surface rather than fade up. The

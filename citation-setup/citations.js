@@ -35,7 +35,7 @@ window.Bib.config = {
   // before the host scans its slides. When the window crosses the query
   // later -- the phone turns, or a desktop window is switched to a phone's
   // size -- Bib.watch re-flows the pages and tells the host to scan again.
-  perSlideNarrow: 5,
+  perSlideNarrow: 4,
   narrow: '(max-width: 44rem), (max-height: 30rem)',
 
   heading: 'References',

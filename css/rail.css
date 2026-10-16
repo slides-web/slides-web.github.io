@@ -30,7 +30,7 @@
 
 /* The line the marks sit on, from the first to the last. 4px in from each
    end is both the middle of a dash (its 8px box) and the top edge of a dot
-   (6px in its 14px box), so whichever mark ends the rail, the line starts
+   (8px in its 16px box), so whichever mark ends the rail, the line starts
    under it and never shows past it. Behind the marks by z-index -- .dots is
    its own stacking context -- and they are opaque (tokens.css), so it passes
    behind them rather than showing through. Out of flow, so the gap is
@@ -88,9 +88,9 @@
 
 .section-tick::before {
   content: '';
-  width: 12px;
-  height: 2px;
-  border-radius: 1px;
+  width: 16px;
+  height: 3px;
+  border-radius: 1.5px;
   background: var(--dot-idle);
   transition: background-color 0.2s ease;
 }
@@ -131,16 +131,16 @@
   gap: 4px;
 }
 
-/* The 14px box exists to contain the active dot's 3px halo, which would
-   otherwise be clipped by .rail-dots-inner's overflow: 6px of dot plus two 3px
-   rings is 12, and the 2px left over is all the margin the halo has. The box
-   plus the 4px gap above gives the rail its 18px pitch. */
+/* The 16px box exists to contain the active dot's 3px halo, which would
+   otherwise be clipped by .rail-dots-inner's overflow: 8px of dot plus two 3px
+   rings is 14, and the 2px left over is all the margin the halo has. The box
+   plus the 4px gap above gives the rail its 20px pitch. */
 .dot {
   display: flex;
   align-items: center;
   justify-content: center;
   width: var(--rail-width);
-  height: 14px;
+  height: 16px;
   padding: 0;
   border: 0;
   background: none;
@@ -149,8 +149,8 @@
 
 .dot::before {
   content: '';
-  width: 6px;
-  height: 6px;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
   background: var(--dot-idle);
   transition: background-color 0.2s ease, box-shadow 0.2s ease;

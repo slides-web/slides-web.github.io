@@ -490,6 +490,10 @@ LaTeX typeset by MathJax, numbered and referable as in a paper. Details are in
   long one belongs on a full-width row: "Color and systems" uses `rows`.
 - **MathJax comes from the internet.** Offline, the slides still work, with
   each equation's LaTeX source in its place (after at most 5 s).
+- **The slides show before MathJax has loaded**, so the title appears at once
+  on a slow phone. If your first slides carry equations, add
+  `eq-hidden-until-ready` to `<div class="slides">`: the slides then stay
+  hidden until the equations are typeset, so no LaTeX source flashes.
 
 ## Citations
 
@@ -515,7 +519,7 @@ are ignored.
 
 **The list** replaces the empty slide
 `<section class="slide" data-section="References" data-bib-placeholder></section>`
-with as many pages as it needs: eight references to a page, five on a phone
+with as many pages as it needs: eight references to a page, four on a phone
 (`perSlide`, `perSlideNarrow`). Keep it before the closing slide.
 
 - **`[?]` on a slide** means the key is not in the `.bib`, is misspelled, or

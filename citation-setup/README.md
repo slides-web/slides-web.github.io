@@ -164,7 +164,7 @@ In `citations.js`, at the top:
 | Setting | Default | What it does |
 | --- | --- | --- |
 | `perSlide` | `8` | References per page |
-| `perSlideNarrow` | `5` | References per page on a screen matching `narrow` |
+| `perSlideNarrow` | `4` | References per page on a screen matching `narrow` |
 | `narrow` | `'(max-width: 44rem), (max-height: 30rem)'` | Media query for a narrow screen: a phone, upright or sideways. Leave it or `perSlideNarrow` unset and `perSlide` applies everywhere |
 | `heading` | `'References'` | Heading on the first reference page |
 | `headingContinued` | `'References (cont.)'` | Heading on the rest |

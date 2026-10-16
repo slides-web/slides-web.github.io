@@ -4,7 +4,7 @@
 // own key press instead of arriving with the slide. A step is a second
 // coordinate *inside* a slide -- it never moves the strip, and neither the
 // counter nor the rail reacts to it, the same way \insertframenumber counts
-// frames rather than overlay pages. See CLAUDE.md.
+// frames rather than overlay pages.
 //
 // data-reveal has three readings:
 //   data-reveal="each"   every direct child of this element is its own step

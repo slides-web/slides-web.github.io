@@ -1,5 +1,5 @@
 // =============================================================================
-// Another equation file.  It merge into window.MathEquations, in whatever order they load.
+// Another equation file. Its keys merge into window.MathEquations, whatever order the files load in.
 // =============================================================================
 
 window.MathEquations = window.MathEquations || {};

@@ -151,6 +151,13 @@
   --fig-paper-pad: 0.75rem;
   --fig-paper-radius: 8px;
 
+  /* Icons (icons.css): black SVGs from fig/, flipped in the dark theme with
+     the figures (--fig-filter). --icon-knockout turns a black icon the page
+     color, to cut it out of a solid accent disc: brightness(0) blackens it
+     and invert() lifts it to --surface's gray, 6.0:1 on the accent. A
+     filter cannot read a token, so keep its number in step with --surface. */
+  --icon-knockout: brightness(0) invert(0.9);
+
   --chrome-pad: clamp(1rem, 3vw, 2.25rem);
 
   /* Header and footer are the same height by construction: both are rows of
@@ -347,4 +354,7 @@
      whose exact colors matter opts out and sits on the paper instead. */
   --fig-filter: invert(0.9) hue-rotate(180deg);
   --fig-paper: #e6e6e6;
+
+  /* --surface's #121212, cut out of the sun-yellow disc: 12.6:1. */
+  --icon-knockout: brightness(0) invert(0.07);
 }

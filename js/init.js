@@ -161,6 +161,12 @@ swipeNavigation();
 // at the first and last. Page Down and Page Up are what a presenter's remote
 // sends.
 document.addEventListener('keydown', function (event) {
+  // With Alt, Ctrl or Cmd held an arrow is the browser's: Back and Forward, or
+  // a move by word. Left alone, as Ctrl + wheel is in js/wheel.js.
+  if (event.altKey || event.ctrlKey || event.metaKey) {
+    return;
+  }
+
   var isNext = event.key === 'ArrowDown' || event.key === 'ArrowRight' || event.key === 'PageDown';
   var isPrev = event.key === 'ArrowUp' || event.key === 'ArrowLeft' || event.key === 'PageUp';
   if (!isNext && !isPrev) {

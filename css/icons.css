@@ -1,0 +1,133 @@
+/* Icons and the layouts built on them: beside a block's title, over open
+   columns and in a list. */
+
+/* An icon is a monochrome SVG from fig/ in an <img>, inside a
+   <span class="icon"> that draws whatever holds it, such as the list's
+   disc. Only the image takes the filter: it is drawn black, like a figure,
+   and flips with the figures in the dark theme (--fig-filter), as the
+   closing slide's GitHub mark does; on the span the filter would turn the
+   fill over too. The alt is empty, since the title beside it says the same.
+
+   The span is 1em square, so a layout sizes it with font-size and pads it
+   in em, a fraction of its own box. The file's width and height count for
+   nothing here, and the margin inside its viewBox is the icon set's own
+   padding, which keeps a row of icons optically even. */
+.icon {
+  display: block;
+  flex: none;
+  width: 1em;
+  height: 1em;
+}
+
+.icon img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  filter: var(--fig-filter);
+}
+
+/* Beside a block's title: the icon leads its h3, bare, one and a half
+   times the title's size. Thin lines fade first as an icon shrinks: the
+   network icon's finest are 2% of its box, a pixel at 50px. */
+.block h3:has(> .icon) {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+}
+
+.block h3 > .icon {
+  font-size: 1.5em;
+}
+
+/* The two layouts below are lists whose items each hold an icon, an h3
+   and a p. The titles are set as a block's are, and the text drops .slide
+   p's measure, as a block's does: the column is already the measure. */
+.icon-columns,
+.icon-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+
+:is(.icon-columns, .icon-list) h3 {
+  margin: 0;
+  font-size: clamp(1.05rem, 2vw, 1.5rem);
+  font-weight: 650;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  color: var(--heading);
+}
+
+:is(.icon-columns, .icon-list) p {
+  max-width: none;
+}
+
+/* Open columns: no cards, each item under a hairline whose first stretch
+   is the accent, with its icon bare at the top. auto-fit, like .results,
+   so they stack on a phone with no media query. */
+.icon-columns {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(12rem, 100%), 1fr));
+  gap: clamp(1.5rem, 4vw, 3rem);
+  max-width: var(--bed-max);
+  text-align: left;
+}
+
+.icon-columns li {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding-top: clamp(1.25rem, 2.5vw, 1.75rem);
+  background:
+    linear-gradient(var(--accent), var(--accent)) 0 0 / 2.5rem 3px no-repeat,
+    linear-gradient(var(--table-line), var(--table-line)) 0 1px / 100% 1px no-repeat;
+}
+
+.icon-columns .icon {
+  font-size: clamp(2.5rem, 4.5vw, 3.5rem);
+  margin-bottom: 0.4rem;
+}
+
+/* A list: each item a row, its icon cut out of a solid accent disc
+   (--icon-knockout) beside the title and the text, the rows parted by
+   hairlines. Sized in em of the list's text, so it shrinks with it. */
+.icon-list {
+  display: flex;
+  flex-direction: column;
+  max-width: 46rem;
+  font-size: clamp(0.95rem, 1.6vw, 1.35rem);
+  text-align: left;
+}
+
+.icon-list li {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 0.15em 1em;
+  padding-block: 0.9em;
+}
+
+.icon-list li + li {
+  border-top: 1px solid var(--table-line);
+}
+
+.icon-list .icon {
+  grid-row: span 2;
+  font-size: 3em;
+  padding: 0.19em;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.icon-list .icon img {
+  filter: var(--icon-knockout);
+}
+
+.icon-list h3 {
+  align-self: end;
+}
+
+.icon-list p {
+  align-self: start;
+}

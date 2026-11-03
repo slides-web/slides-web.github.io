@@ -1,9 +1,10 @@
 // The dot rail down the right edge: dots for this section, dashes for the rest.
 
-// Built once, then never rebuilt. Every *named* section contributes both of its
-// representations up front -- a dash and a run of dots -- and changing section
-// only toggles a class. That is what makes the rail animate: a node created at
-// the moment of the change would have no previous state to transition from.
+// Built once, and again only by rescanDeck(). Every *named* section contributes
+// both of its representations up front -- a dash and a run of dots -- and
+// changing section only toggles a class. That is what makes the rail animate: a
+// node created at the moment of the change would have no previous state to
+// transition from.
 //
 // Indexed by section, not packed: an unnamed section holds a null rather than
 // being skipped, so railGroups[i] always describes sections[i].

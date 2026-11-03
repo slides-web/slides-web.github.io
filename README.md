@@ -20,12 +20,14 @@ copy into your own talk.
    (`<p class="tag">…</p>`), set its `data-section`, and replace the text.
 
 For a new talk, copy the whole folder, delete the gallery slides you don't
-want, and keep the title, contents, References and closing slides; the tab
-shows the `<title>` in `index.html` and `fig/favicon.svg`. Your figures go in
-`fig/`, equations in `eqn/` and references in `bib/`, while the setup folders
-(`mathjax/`, `figure-setup/`, `citation-setup/`) stay as they are, each with
-a README of its settings. Colors, spacing and motion are tokens in
-`css/tokens.css`.
+want, and keep the title, contents, References and closing slides. In the
+`<head>` of `index.html`, change the `<title>` (the tab's name) and the
+description, and change or delete the canonical link, which points at this
+gallery; the tab's icon is `fig/favicon.svg`. Your figures go in `fig/`,
+equations in `eqn/` and references in `bib/`, while the setup folders
+(`mathjax/`, `figure-setup/`, `citation-setup/`) need no changes beyond their
+settings, each explained in its README. Colors, spacing and motion are tokens
+in `css/tokens.css`.
 
 ## Quick reference
 
@@ -36,7 +38,7 @@ a README of its settings. Colors, spacing and motion are tokens in
 | `<h2>` | the slide title, also its name in the rail |
 | `<ol class="toc"></ol>` | the contents list, filled in for you |
 | `<div class="title-page">` | the title slide: an `h1` with its accent line in a `<span>`, then a `.title-foot` holding the subtitle and a `.title-byline` |
-| `<p class="closing-links">` | the closing slide's links: each an `<a>` holding an icon `<img>` and a name |
+| `<p class="closing-links">` | the closing slide's links: each an `<a>` holding an icon `<img>` (`class="icon-mono"` if drawn in black) and a name |
 
 | [Layouts](#layouts) | Gives |
 |---|---|
@@ -56,6 +58,9 @@ a README of its settings. Colors, spacing and motion are tokens in
 | `bullets` | a list with markers; on an `<ol>`, numbered |
 | `<li class="pro">`, `<li class="con">` | a check in a green disc, or a cross in a red one, in place of the marker |
 | `lines` | a list with no markers, centered |
+| `<span class="icon"><img src="fig/…" alt=""></span>` | an icon; first in a block's `h3`, it leads the title |
+| `icon-columns` | columns with no card, each under its icon (`<ul>` of icon, `h3`, `p`) |
+| `icon-list` | the same items in rows, each icon in an accent disc |
 | `table` | a grouped table: a `<tbody>` per group, `table-group` for its name |
 | `<div class="table-data">` | around a `table` of results: centered columns, scrolls sideways on a phone |
 | `<tr class="table-highlight">` | a shaded row, LaTeX's `\rowcolor` |
@@ -92,7 +97,7 @@ a README of its settings. Colors, spacing and motion are tokens in
 | `data-eq-mode="inline"` | inside a sentence |
 | `(\ref{eq:key})` | the equation's number, as a link |
 | `\( … \)` | a symbol typed in place |
-| `\color{colMyBlue}{…}` | one term in color |
+| `{\color{colMyBlue} …}` | one term in color |
 
 | [Citations](#citations) | Gives |
 |---|---|
@@ -134,9 +139,10 @@ narrow screen by itself.
 
 ### columns
 
-Blocks side by side, each an equal share of the row and at least 18rem wide,
-so they stack as the screen narrows. Two, three or four blocks all work; a
-`block-wide` spans the whole row, as on "Arriving in motion".
+Blocks side by side, each an equal share of the row and at least 15rem wide,
+so they stack as the screen narrows. A row holds three at most: a fourth wraps
+under the first, so put four in a `grid`, two by two. A `block-wide` spans the
+whole row, as on "Icons beside the titles".
 
 ```html
 <div class="columns">
@@ -169,7 +175,7 @@ For two cards beside a figure, put a `rows` in the block's place, as on
 ```html
 <div class="split">
   <div class="block">…</div>
-  <figure class="fig" id="fig-Network" style="--fig-w: 88mm">…</figure>
+  <figure class="fig" id="fig-Network39" style="--fig-w: 86.943mm">…</figure>
 </div>
 ```
 
@@ -219,7 +225,8 @@ work inside them.
 `<ul class="bullets">` has round markers in the accent color, left-aligned and
 centered as a group; an `<ol class="bullets">` is numbered, as Beamer's
 `enumerate`; `<ul class="lines">` has no markers and centers every line, for
-short statements. All three work with every step and animation. An item of a
+short statements. All three work with every step and animation but rise,
+which needs a wrapper per line. An item of a
 numbered list that is one display equation,
 `<li><div data-eq="…" data-eq-mode="plain"></div></li>`, gets its number
 centered on the equation, as on "AC current dynamics".
@@ -228,6 +235,31 @@ centered on the equation, as on "AC current dynamics".
 `<li class="pro">` takes a check in a green disc, and `<li class="con">` a
 cross in a red one. Put one list per method in a `block`, and the blocks in
 `columns`, as on "Two methods compared".
+
+### Icons
+
+An icon is a one-color SVG from `fig/`, in an `<img>` inside a
+`<span class="icon">`, with an empty `alt`, since its title says the same.
+Drawn in black, as figures are, it turns light in the dark theme (in an
+`icon-list` disc it takes the page color). The layout sets its size, so the
+file's own width and height don't matter; leave the margin around the
+drawing, which keeps icons side by side the same size.
+
+- **Beside a block's title:** first in the `h3`, as on "Icons beside the titles".
+- **`icon-columns`:** columns with no card, each under a rule and its icon, as
+  on "Icons over the titles"; on a phone they stack.
+- **`icon-list`:** rows, each beside its icon in a disc of the accent color, as
+  on "A list with icons".
+
+```html
+<ul class="icon-list">                      <!-- or icon-columns -->
+  <li>
+    <span class="icon"><img src="fig/network.svg" alt=""></span>
+    <h3>A network model</h3>
+    <p>…</p>
+  </li>
+</ul>
+```
 
 ### Tables
 
@@ -271,9 +303,9 @@ a `<p class="footnote">` at the very end of the slide:
 ```
 
 Markers and notes are numbered for you, starting again on every slide, and
-the notes sit just above the footer. Notes without markers stay unnumbered: a
-source line, say. A note can carry a citation, and `data-reveal` to arrive
-with its item.
+the notes sit just above the footer. On a slide with no markers the notes stay
+unnumbered: a source line, say. A note can carry a citation, and `data-reveal`
+to arrive with its item.
 
 ### Highlighter
 
@@ -338,8 +370,8 @@ arriving with the slide, like Beamer's overlays; until then it shows faintly.
 - **To make everything wait on arrival**, give something ahead of it a bare
   `data-reveal`, which claims step 1 (as the wide block on "A grid" does), or
   number from 2 (as "Rising into place" and "Marking a phrase" do).
-- `data-reveal="each"` works on `bullets`, `lines`, `columns`, `rows`, `grid`
-  and `process`.
+- `data-reveal="each"` works on any list or layout: `bullets`, `lines`,
+  `columns`, `rows`, `grid`, `process`, `results`, `icon-columns`, `icon-list`.
 
 The variants below go **on the element with `data-reveal="each"`, or on any
 element around the steps**: one list, a whole `<section class="slide">`, or
@@ -413,18 +445,18 @@ LaTeX's `\includegraphics`, `\caption`, `\label` and `\ref`, matched in the
 [`figure-setup/README.md`](figure-setup/README.md).
 
 ```html
-<figure class="fig" id="fig-Network" style="--fig-w: 88mm">
-  <img src="fig/fig-Network.svg" alt="Network diagram">
+<figure class="fig" id="fig-Network39" style="--fig-w: 86.943mm">
+  <img src="fig/fig-Network39.svg" alt="Network diagram">
   <figcaption>IEEE 39-bus test system.</figcaption>
 </figure>
 
-… as shown in <a class="fig-ref" href="#fig-Network"></a> …
+… as shown in <a class="fig-ref" href="#fig-Network39"></a> …
 ```
 
 - **`--fig-w` must be the width the SVG file itself declares.** Every figure
   is drawn at that width times `--fig-scale`, so all of them stay in
-  proportion. To resize one, change `--fig-scale` or re-export the file.
-  Size the `<figure>`, never the `<img>` inside it.
+  proportion. To resize one, re-export its file; `--fig-scale` resizes them
+  all. Size the `<figure>`, never the `<img>` inside it.
 - **`fig-h`** sizes a figure by height instead:
   `class="fig fig-h" style="--fig-h: 60mm"`. Where the width that height
   needs does not fit (a phone), it takes the width there is.
@@ -470,7 +502,8 @@ LaTeX typeset by MathJax, numbered and referable as in a paper. Details are in
   text. To show a backslash sequence literally, put it inside `<code>`.
 - **A system of equations** is a key holding an array, one `String.raw` per
   row, with `&` before the sign that lines the rows up. Each row is numbered
-  and labeled `eq:pq1`, `eq:pq2`, …. Never write `\label` or `\\` yourself.
+  and labeled `eq:pq1`, `eq:pq2` and so on; the `\label` and the `\\` between
+  rows are added for you.
 
   ```js
   pq: [
@@ -479,11 +512,11 @@ LaTeX typeset by MathJax, numbered and referable as in a paper. Details are in
   ],
   ```
 
-- **Color** a term with `\color{colMyBlue}{…}`. `colMyRed`, `colMyBlue` and
-  `colMyGreen` follow the light and dark themes. Add your own in section 1 of
-  `mathjax/mathjax-setup.js`, pointing at a theme color,
-  `\definecolor{colMyBlue}{named}{var(--eq-blue)}`, or at a fixed
-  `{RGB}{31,81,154}`.
+- **Color** a term with `{\color{colMyBlue} …}`: the braces end the color.
+  `colMyRed`, `colMyBlue` and `colMyGreen` follow the light and dark themes.
+  Add your own in section 1 of `mathjax/mathjax-setup.js`, pointing at a
+  theme color, `\definecolor{colMyBlue}{named}{var(--eq-blue)}`, or at a
+  fixed `{RGB}{31,81,154}`.
 - **A numbered equation's line is at most 50rem wide** (`--eq-max`), so its
   number stays near it. A display equation too wide for its box scrolls
   sideways (`displayOverflow: 'scroll'`; `'scale'` shrinks it instead), so a
@@ -526,3 +559,18 @@ with as many pages as it needs: eight references to a page, four on a phone
   the generator has not run since you added it. The browser console names it.
 - **The generator writes nothing while any cited key is missing**, so the deck
   keeps its previous list until you fix it.
+
+## Credits
+
+The four icons in `fig/` come from open icon sets, under their own licenses:
+`network.svg` is "Mesh network" by Delapouite, from
+[game-icons.net](https://game-icons.net)
+([CC BY 3.0](https://creativecommons.org/licenses/by/3.0/)); `flow-map.svg`
+is "flow-map" from [Font-GIS](https://github.com/Viglino/font-gis) by
+Jean-Marc Viglino ([CC BY 4.0](https://creativecommons.org/licenses/by/4.0/));
+`compare.svg` is "compare" from IBM's
+[Carbon](https://github.com/carbon-design-system/carbon) icons; and
+`github.svg` is "github" from Pictogrammers'
+[Material Design Icons](https://github.com/Templarian/MaterialDesign). The
+last two are under the [Apache 2.0](https://www.apache.org/licenses/LICENSE-2.0)
+license.

@@ -58,8 +58,8 @@ var STRIP_LANDED = 0.05;
 // where the strip is on screen with where goToSlide sent it. No timer, and no
 // copy of --slide-duration to keep in step. The height comes from
 // getBoundingClientRect because it is fractional; a rounded one would drift
-// by a pixel per slide on late slides. With transitions off, as in the
-// screenshot recipe, the strip is always landed.
+// by a pixel per slide on late slides. With transitions off, as in a
+// headless screenshot, the strip is always landed.
 function stripInFlight() {
   var height = strip.getBoundingClientRect().height;
   if (!height) {

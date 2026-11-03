@@ -8,7 +8,7 @@
 
    Deliberately smaller than body text: a reference table is scanned for one
    entry, not read through. This is the deck's \scriptsize, and it is what lets
-   a quick-reference slide hold twenty-odd rows in a single column. */
+   a nomenclature hold twenty-odd rows in a single column. */
 .table {
   border-collapse: collapse;
   margin: 0;

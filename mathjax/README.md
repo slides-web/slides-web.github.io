@@ -8,7 +8,7 @@ add one class.
 | File | Role |
 | --- | --- |
 | `mathjax-setup.js` | Colors, MathJax config, equation injector, systems, reveal |
-| `mathjax.css` | The cloak rule |
+| `mathjax.css` | The cloak rule and the `\ref` link style |
 
 The equations themselves are the project's, not the module's: they live in
 `equations-*.js` files in an `eqn/` folder beside this one, as the figures live

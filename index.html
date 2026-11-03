@@ -16,7 +16,7 @@
 <body>
   <div class="page">
     <header class="header">
-      <img class="brand-mark" src="fig/logo.svg" alt="page-logo">
+      <img class="brand-mark" src="fig/logo.svg" alt="">
       <p class="section-label" aria-live="polite"></p>
       <button type="button" class="theme-toggle" aria-label="Dark theme" aria-pressed="false">
         <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
@@ -148,30 +148,6 @@
           </ul>
         </section>
 
-        <!-- Hidden, then fade and glide in (data-reveal-motion). README: Steps. -->
-        <section class="slide" data-section="Layouts and Animations">
-          <h2>Arriving in motion</h2>
-          <p class="tag">columns · data-reveal-motion</p>
-          <div class="columns" data-reveal-motion>
-            <div class="block block-wide" data-reveal>
-              <h3>Hidden until their turn</h3>
-              <p>Nothing on the slide says more is coming, so use it to surprise the audience.</p>
-            </div>
-            <div class="block" data-reveal="2">
-              <h3>Fade</h3>
-              <p>Hidden, not ghosted, then brought to full opacity.</p>
-            </div>
-            <div class="block" data-reveal="2">
-              <h3>Glide</h3>
-              <p>It waits a little to the left, then glides into place.</p>
-            </div>
-            <div class="block" data-reveal="2">
-              <h3>Stagger</h3>
-              <p>Each block starts a moment after.</p>
-            </div>
-          </div>
-        </section>
-
         <!-- Lines rising through a mask (data-reveal-rise), beside a block with a numbered list (ol.bullets). README: Layouts, Content, Steps. -->
         <section class="slide" data-section="Layouts and Animations">
           <h2>Rising into place</h2>
@@ -210,6 +186,76 @@
               list</mark> count the slides for you.</p>
         </section>
 
+        <!-- An icon beside each block's title (h3 .icon), the blocks arriving in motion (data-reveal-motion). README: Layouts, Content, Steps. -->
+        <section class="slide" data-section="Layouts and Animations">
+          <h2>Icons beside the titles</h2>
+          <p class="tag">columns · block-wide · icon · data-reveal-motion</p>
+          <div class="columns" data-reveal-motion>
+            <div class="block block-wide" data-reveal>
+              <h3>A study in three parts</h3>
+              <p>An icon beside each title tells the parts apart at a glance.</p>
+            </div>
+            <div class="block" data-reveal="2">
+              <h3><span class="icon"><img src="fig/network.svg" alt=""></span>Network</h3>
+              <p>Buses joined by lines: the IEEE 39-bus system.</p>
+            </div>
+            <div class="block" data-reveal="2">
+              <h3><span class="icon"><img src="fig/flow-map.svg" alt=""></span>Power flow</h3>
+              <p>Where the power goes, from the generators to the loads.</p>
+            </div>
+            <div class="block" data-reveal="2">
+              <h3><span class="icon"><img src="fig/compare.svg" alt=""></span>Comparison</h3>
+              <p>Grid-following against grid-forming control.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Open columns, each under its icon (.icon-columns). README: Content. -->
+        <section class="slide" data-section="Layouts and Animations">
+          <h2>Icons over the titles</h2>
+          <p class="tag">icon-columns · icon</p>
+          <ul class="icon-columns">
+            <li>
+              <span class="icon"><img src="fig/network.svg" alt=""></span>
+              <h3>Network</h3>
+              <p>Which buses and lines decide the stability of the grid?</p>
+            </li>
+            <li>
+              <span class="icon"><img src="fig/flow-map.svg" alt=""></span>
+              <h3>Power flow</h3>
+              <p>How does the power reroute after a line trips?</p>
+            </li>
+            <li>
+              <span class="icon"><img src="fig/compare.svg" alt=""></span>
+              <h3>Comparison</h3>
+              <p>Which control rides through a fault better?</p>
+            </li>
+          </ul>
+        </section>
+
+        <!-- A list, each item beside its icon in an accent disc (.icon-list), one at a time. README: Content, Steps. -->
+        <section class="slide" data-section="Layouts and Animations">
+          <h2>A list with icons</h2>
+          <p class="tag">icon-list · icon · data-reveal="each"</p>
+          <ul class="icon-list" data-reveal="each">
+            <li>
+              <span class="icon"><img src="fig/network.svg" alt=""></span>
+              <h3>A network model</h3>
+              <p>The IEEE 39-bus system, with a wind farm at one of its buses.</p>
+            </li>
+            <li>
+              <span class="icon"><img src="fig/flow-map.svg" alt=""></span>
+              <h3>A power-flow study</h3>
+              <p>The operating point every simulation starts from.</p>
+            </li>
+            <li>
+              <span class="icon"><img src="fig/compare.svg" alt=""></span>
+              <h3>A fair comparison</h3>
+              <p>Both controls through the same faults, from the same point.</p>
+            </li>
+          </ul>
+        </section>
+
         <!-- A block beside a figure (.split). README: Layouts, Figures. -->
         <section class="slide" data-section="Figures">
           <h2>A figure beside text</h2>
@@ -217,12 +263,12 @@
           <div class="split">
             <div class="block">
               <ul class="bullets" data-reveal="each">
-                <li>A figure is drawn at the width its own file declares, 88 mm here.</li>
+                <li>A figure is drawn at the width its own file declares, 87 mm here.</li>
                 <li>The caption is automatically numbered, in the order the figures appear.</li>
                 <li>The block beside it takes whatever width is left.</li>
               </ul>
             </div>
-            <figure class="fig" id="fig-Network39" style="--fig-w: 88mm">
+            <figure class="fig" id="fig-Network39" style="--fig-w: 86.943mm">
               <img src="fig/fig-Network39.svg" alt="Network diagram">
               <figcaption>IEEE 39-bus test system.</figcaption>
             </figure>
@@ -232,7 +278,7 @@
         <!-- A figure alone, sized by width (.fig). README: Figures. -->
         <section class="slide" data-section="Figures">
           <h2>A figure occupying the whole slide</h2>
-          <figure class="fig" id="fig-WTcontrolSystem" style="--fig-w: 176mm">
+          <figure class="fig" id="fig-WTcontrolSystem" style="--fig-w: 176.49mm">
             <img src="fig/fig-WTcontrolSystem.svg" alt="WT control system">
             <figcaption>Grid-forming type-IV wind turbine.</figcaption>
           </figure>
@@ -264,7 +310,7 @@
           <p class="tag">split · fig-no-caption · data-reveal-motion</p>
           <div class="split">
             <figure class="fig fig-no-caption" style="--fig-w: 87.091mm">
-              <img src="fig/fig-Network118.svg" alt="Network diagram">
+              <img src="fig/fig-Network118.svg" alt="IEEE 118-bus test system">
             </figure>
             <div class="rows" data-reveal-motion>
               <div class="block" data-reveal="2">

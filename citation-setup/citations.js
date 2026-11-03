@@ -284,10 +284,11 @@ window.Bib.watch = function (onChange) {
 //
 // One shared panel, moved to whichever marker the pointer is on. It uses the
 // native popover API so the panel sits in the top layer and is not clipped by
-// .page's overflow: hidden. Hover only, by design: the markers are plain text
-// with no color, no cursor change and no tab stop, so keyboard and touch never
-// reach it -- the full list is on the reference slides, which is where anyone
-// not holding a mouse will read it.
+// .page's overflow: hidden. Made for the mouse: the markers are plain text with
+// no color, no cursor change and no tab stop, so the keyboard never reaches it
+// -- the full list is on the reference slides, which is where anyone not
+// holding a mouse will read it. A tap opens it too, through the mouse events a
+// touch screen sends after it, so the next touch takes it down again.
 
 window.Bib._popover = null;
 window.Bib._popoverTimer = null;
@@ -433,9 +434,11 @@ window.Bib._wirePopover = function (markers, numbers) {
 
   // The panel is fixed to the viewport, so anything that moves the deck under
   // it has to take it down -- otherwise it is left floating over a slide the
-  // citation is no longer on.
+  // citation is no longer on. A touch may start a swipe; it comes before the
+  // mouse events of a tap, so a tap on a marker still opens the panel.
   document.addEventListener('keydown', window.Bib._hidePopover);
   window.addEventListener('wheel', window.Bib._hidePopover, { passive: true });
+  document.addEventListener('touchstart', window.Bib._hidePopover, { passive: true });
   window.addEventListener('resize', window.Bib._hidePopover);
   document.addEventListener('scroll', window.Bib._hidePopover, true);
 };

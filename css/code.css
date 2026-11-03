@@ -1,6 +1,6 @@
 /* Source code on a slide: the listing (pre.code) and the inline form (code in
    a sentence), for a talk that shows code. The gallery shows two listings, the
-   HTML and the JS of one system of equations, on "Code, marks and footnotes".
+   HTML and the JS of one equation, on "Code, marks and footnotes".
 
    MathJax skips pre and code by default, which is what lets a listing show
    \ref{eq:park} or \( ... \) literally instead of typesetting it. The same rule

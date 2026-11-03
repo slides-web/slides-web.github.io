@@ -133,7 +133,7 @@ when the page also sizes its own type in `pt` times `--fig-scale`. A page using
 > **`--fig-w` must equal the figure's own natural width**, read from its SVG
 > file.
 
-The class does not tell the browser how wide the file is — it already knows
+`--fig-w` does not tell the browser how wide the file is — it already knows
 that. It says *draw this at its natural width times the scale*. When the value
 matches the file, the figure is scaled by `--fig-scale` **and by nothing else**,
 which is what keeps every figure in proportion with every other one.
@@ -155,7 +155,7 @@ identically anywhere.
 **Inkscape** — the page **must** be cropped to the drawing, or the figure
 arrives with a large empty margin: `File > Document Properties` (Ctrl+Shift+D)
 → *Resize to content* → `Save As` into the figures folder. Read the resulting
-`viewBox` for `--fig-w`; set label text at **8 pt in the same font family the
+`width` (in mm) for `--fig-w`; set label text at **8 pt in the same font family the
 page uses**.
 
 > *Calibration check:* a caption and the labels inside a hand-drawn figure

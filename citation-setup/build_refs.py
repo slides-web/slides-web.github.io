@@ -221,6 +221,15 @@ def _iter_blocks(source, report, name):
         blocks.append((match.group(1).lower(), source[brace + 1:end - 1]))
 
 
+# BibTeX's built-in abbreviations: a month written bare, month = jan, as
+# reference managers export it. A @string of the same name still overrides one.
+MONTHS = {
+    "jan": "January", "feb": "February", "mar": "March", "apr": "April",
+    "may": "May", "jun": "June", "jul": "July", "aug": "August",
+    "sep": "September", "oct": "October", "nov": "November", "dec": "December",
+}
+
+
 def parse_bib(bib_path, report):
     """Return ({key: (type, fields, problems)}, number of abbreviations).
 
@@ -243,8 +252,8 @@ def parse_bib(bib_path, report):
     blocks = _iter_blocks(source, report, bib_path.name)
 
     # Pass 1: the abbreviations. Each is resolved against the ones already
-    # seen, so one may be built from another.
-    strings = {}
+    # seen, so one may be built from another. BibTeX's months are there first.
+    strings = dict(MONTHS)
     for entry_type, body in blocks:
         if entry_type != "string":
             continue
@@ -285,7 +294,7 @@ def parse_bib(bib_path, report):
 
         entries[key] = (entry_type, fields, problems)
 
-    return entries, len(strings)
+    return entries, len(strings) - len(MONTHS)
 
 
 # --- Step 3: LaTeX to plain text ---------------------------------------------

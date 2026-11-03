@@ -173,7 +173,8 @@ In `citations.js`, at the top:
 | `popoverDelay` | `120` | Milliseconds before the reference appears |
 
 In `citations.css`, at the top: `--bib-size`, `--bib-line`, `--bib-row-gap`,
-`--bib-col-gap`, `--bib-num-width`, and `--bib-col-min` — the narrowest a column
+`--bib-col-gap`, `--bib-num-gap`, `--bib-num-width`, and `--bib-col-min` — the
+narrowest a column
 may be before the list drops from two columns to one. The hover panel uses
 `--bib-popover-width` and `--bib-popover-size`.
 
@@ -201,16 +202,18 @@ loaded with until you reload.
 
 **`error: 'key' uses the abbreviation 'TIE', which has no @string
 definition`** — an entry was copied in without its `@string` line. Copy that
-line across too. Only cited entries are checked.
+line across too. Only cited entries are checked. The months `jan` … `dec`
+need none: they are built in, as in BibTeX.
 
-**`warning: 'key' could not convert every LaTeX command`** — the entry contains
+**`warning: 'key' (field): could not convert every LaTeX command`** — the entry contains
 a command the generator does not know. The warning shows how the reference will
 read. Either simplify that field in the `.bib`, or add the command to
 `COMMAND_CHARS` in `build_refs.py`.
 
 ## Notes
 
-- The hover panel needs a mouse. The reference list is how it is read otherwise.
+- The hover panel is made for a mouse; on a touch screen a tap shows it and the
+  next touch takes it down. The reference list is how it is read otherwise.
 - `bib/refs.generated.js` is overwritten on every run. Change the `.bib`, not that
   file.
 - `bib/refs.bib` must be saved as UTF-8. The generator says so plainly if it is not.

@@ -49,9 +49,9 @@
 
 /* One group per section, holding both of that section's representations: the
    collapsed dash and the expanded run of dots. Changing section collapses one
-   and opens the other. Nothing in the rail is created or destroyed after the
-   first build -- that is the only reason any of this can transition, since a
-   freshly created node has no previous state to animate from.
+   and opens the other. Nothing in the rail is created or destroyed between
+   builds (js/rail.js) -- that is the only reason any of this can transition,
+   since a freshly created node has no previous state to animate from.
 
    Every group is the same fixed width so the rail's right edge never moves as
    dashes swap for dots. */
@@ -165,7 +165,9 @@
   box-shadow: 0 0 0 3px var(--accent-halo);
 }
 
+/* Drawn inside the box: .rail-dots-inner's overflow: hidden would clip a ring
+   outside it to one bar under the dot. */
 .dot:focus-visible {
   outline: 2px solid var(--chrome-text);
-  outline-offset: 3px;
+  outline-offset: -2px;
 }

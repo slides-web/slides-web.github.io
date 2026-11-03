@@ -113,8 +113,8 @@
 }
 
 /* A section divider, generated before every named section (js/sections.js):
-   "Section" over a large number, both in the accent, like the contents
-   list's numbers -- 6.0:1 on the page at worst -- then a rule in the accent,
+   "Section" over a large number, both in the accent -- 6.0:1 on the page at
+   worst -- then a rule in the accent,
    the section line's color, and beside it the section's name in display
    type. The name is set against the rule, so a name that wraps keeps that
    edge; the pair as a whole is centered, as on every slide. Neither side

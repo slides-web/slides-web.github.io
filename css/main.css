@@ -1,10 +1,12 @@
 /* Every stylesheet, in cascade order. index.html links this one file, so the
-   order lives here rather than spread across nine <link> tags.
+   order lives here rather than spread across a <link> tag per file.
 
    The order is mostly for readability -- almost every rule in the deck wins by
-   specificity and would work anywhere. One pair does not: .slide p (stage) and
-   .block p (content) have identical specificity, so source order is the only
-   thing making the override work. stage.css must stay above content.css. */
+   specificity and would work anywhere. Three pairs do not, each a tie that
+   source order settles: .slide p (stage) against .block p (content) and the
+   icon lists' p (icons), so stage.css stays above both; and a stepped block's
+   transition (reveal) against .block's own (content), so reveal.css stays
+   below content.css. */
 
 @import "tokens.css";
 @import "base.css";
@@ -12,6 +14,7 @@
 @import "label.css";
 @import "stage.css";
 @import "content.css";
+@import "icons.css";
 @import "code.css";
 @import "table.css";
 @import "reveal.css";

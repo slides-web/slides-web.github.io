@@ -19,16 +19,18 @@
 }
 
 /* auto-fit plus a minimum track does the responsive work with no media query:
-   the moment two 18rem tracks no longer fit the stage, the grid drops to one
-   column and the blocks stack by themselves.
+   the moment two 15rem tracks no longer fit the stage, the grid drops to one
+   column and the blocks stack by themselves. 15rem is the widest minimum that
+   still seats three cards in a row on a 1024x768 projector; at 18rem they
+   wrapped two and one.
 
-   The minimum is capped at the bed's own width, min(18rem, 100%). On a phone
-   the stage is narrower than 18rem, and an uncapped minimum made the single
+   The minimum is capped at the bed's own width, min(15rem, 100%). On a phone
+   the stage can be narrower than that, and an uncapped minimum made the single
    track wider than the stage: the blocks ran off to the right and under the
    rail, while .rows, whose track can shrink to nothing, fitted. Capped, the
    three arrangements behave the same on a narrow screen. */
 .columns {
-  grid-template-columns: repeat(auto-fit, minmax(min(18rem, 100%), 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(15rem, 100%), 1fr));
 }
 
 /* The same blocks stacked instead of side by side. One track, so they never
@@ -251,7 +253,7 @@
 /* Key results: big numbers, each with a short label under it, for a results
    or conclusions slide. A list whose items open with the number in <b>.
    auto-fit like .columns, so three or four share a row and they stack on a
-   phone. The number is in the accent, 5.5:1 at worst on the page. */
+   phone. The number is in the accent, 6.0:1 at worst on the page. */
 .results {
   list-style: none;
   margin: 0;
